@@ -8,6 +8,16 @@ POSTGRES_SETUP_TEST := user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} dbnam
 
 MIGRATION_FOLDER:=data/sql/migrations
 
+CLICKHOUSE_USER ?= default
+CLICKHOUSE_PASSWORD ?= 
+CLICKHOUSE_DB ?= default
+CLICKHOUSE_HOST ?= 127.0.0.1
+CLICKHOUSE_PORT ?= 9000
+CLICKHOUSE_SETUP_TEST := clickhouse://${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}@${CLICKHOUSE_HOST}:${CLICKHOUSE_PORT}/${CLICKHOUSE_DB}
+
+CLICKHOUSE_MIGRATION_FOLDER := data/click/migrations
+
+
 
 .PHONY: migration-create
 migration-create:
@@ -21,3 +31,16 @@ migration-up:
 migration-down:
 	goose -dir "$(MIGRATION_FOLDER)" postgres "$(POSTGRES_SETUP_TEST)" down
 
+
+
+.PHONY: click-migration-create
+click-migration-create:
+	goose -dir "$(CLICKHOUSE_MIGRATION_FOLDER)" create "$(name)" sql
+
+.PHONY: click-migration-up
+click-migration-up:
+	goose -dir "$(CLICKHOUSE_MIGRATION_FOLDER)" clickhouse "$(CLICKHOUSE_SETUP_TEST)" up
+
+.PHONY: click-migration-down
+click-migration-down:
+	goose -dir "$(CLICKHOUSE_MIGRATION_FOLDER)" clickhouse "$(CLICKHOUSE_SETUP_TEST)" down

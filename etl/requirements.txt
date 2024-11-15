@@ -1,9 +1,0 @@
-httpx
-bs4
-loguru
-aiofiles
-tqdm
-# rag requirements
-torch
-langchain-huggingface
-langchain_postgres

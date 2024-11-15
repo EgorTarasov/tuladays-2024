@@ -1,3 +1,4 @@
 .venv/
 .vscode
-volumes/
+./volumes
+.env

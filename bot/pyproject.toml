@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "healthbot"
+version = "0.1.0"
+description = ""
+authors = ["blank"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aiogram = "^3.14.0"
+fastapi = {extras = ["standard"], version = "^0.115.5"}
+psycopg = {extras = ["pool"], version = "^3.2.3"}
+clickhouse-driver = "^0.2.9"
+
+
+[tool.poetry.group.dev.dependencies]
+aiogram = "^3.14.0"
+fastapi = "^0.115.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

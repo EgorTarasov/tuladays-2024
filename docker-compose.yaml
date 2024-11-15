@@ -1,5 +1,6 @@
 services:
   backend:
+    image: ghcr.io/egortarasov/tuladays-2024/backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile.backend
@@ -20,7 +21,18 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-
+  telegram:
+    image: ghcr.io/egortarasov/tuladays-2024/telegram:latest
+    build:
+      context: ./bot
+      dockerfile: Dockerfile.telegram
+    env_file:
+      - .env
+    depends_on:
+      - pg
+      - clickhouse
+    ports:
+      - "8000:8000"
   pg:
     image: pgvector/pgvector:pg17
     container_name: pg
@@ -38,3 +50,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    user: "101:101"
+    container_name: clickhouse
+    hostname: clickhouse
+    volumes:
+      - ${PWD}/fs/volumes/clickhouse/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${PWD}/fs/volumes/clickhouse/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+  grafana:
+    build: 
+      context: ${PWD}/docker_files/
+      dockerfile: grafana.Dockerfile
+    container_name: grafana
+    hostname: grafana
+    volumes:
+      - ${PWD}/fs/volumes/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    depends_on:
+      - clickhouse

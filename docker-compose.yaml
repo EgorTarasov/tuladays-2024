@@ -38,3 +38,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    user: "101:101"
+    container_name: clickhouse
+    hostname: clickhouse
+    volumes:
+      - ${PWD}/fs/volumes/clickhouse/config.d/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${PWD}/fs/volumes/clickhouse/users.d/users.xml:/etc/clickhouse-server/users.d/users.xml
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+  grafana:
+    build: 
+      context: ${PWD}/docker_files/
+      dockerfile: grafana.Dockerfile
+    container_name: grafana
+    hostname: grafana
+    volumes:
+      - ${PWD}/fs/volumes/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    depends_on:
+      - clickhouse

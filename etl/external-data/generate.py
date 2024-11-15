@@ -12,6 +12,16 @@ EXTERNAL_SOURCE_COLUMNS = [
     "email",  # string
     "address",  # string
     "risk_of_hearth_disease",  # 0.0 - 1.0
+    "diagnosis",  # string
+]
+
+possible_diagnosis = [
+    "Ишемическая болезнь сердца",
+    "Инфаркт миокарда",
+    "Аритмия",
+    "Ревмокардит",
+    "Сердечная недостаточность",
+    "Пороки сердца",
 ]
 
 
@@ -22,6 +32,7 @@ def generate_record():
         "external_id": fake.uuid4(),
         "fio": fio,
         "sex": sex,
+        "diagnosis": fake.random_element(elements=possible_diagnosis),
         "date_of_birth": fake.date_of_birth(maximum_age=100).strftime("%Y-%m-%d"),
         "email": fake.email(),
         "address": fake.address(),

@@ -3,6 +3,7 @@
 CREATE TABLE IF NOT EXISTS heart_data (
     id UUID DEFAULT generateUUIDv4(),
     patient_id Int64,
+    -- external_data (id)
     timestamp DateTime DEFAULT now(),
     heart_rate UInt32,
     systolic_pressure UInt32,
@@ -14,6 +15,7 @@ ORDER BY (patient_id, timestamp);
 CREATE TABLE IF NOT EXISTS blood_oxygen_data (
     id UUID DEFAULT generateUUIDv4(),
     patient_id Int64,
+    -- external_data (id)
     timestamp DateTime DEFAULT now(),
     blood_oxygen_level UInt8 -- 0 - 100 percent
 ) ENGINE = MergeTree()
@@ -23,6 +25,7 @@ ORDER BY (patient_id, timestamp);
 CREATE TABLE IF NOT EXISTS sugar_level_data (
     id UUID DEFAULT generateUUIDv4(),
     patient_id Int64,
+    -- external_data (id)
     timestamp DateTime DEFAULT now(),
     sugar_level Float32 -- Sugar level measurement
 ) ENGINE = MergeTree()

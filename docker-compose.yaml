@@ -1,5 +1,6 @@
 services:
   backend:
+    image: ghcr.io/egortarasov/tuladays-2024/backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile.backend
@@ -20,7 +21,18 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-
+  telegram:
+    image: ghcr.io/egortarasov/tuladays-2024/telegram:latest
+    build:
+      context: ./bot
+      dockerfile: Dockerfile.telegram
+    env_file:
+      - .env
+    depends_on:
+      - pg
+      - clickhouse
+    ports:
+      - "8000:8000"
   pg:
     image: pgvector/pgvector:pg17
     container_name: pg

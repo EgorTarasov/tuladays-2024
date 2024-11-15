@@ -1,0 +1,17 @@
+FROM alpine:latest
+
+# Install dependencies
+RUN apk add --no-cache ca-certificates curl make go
+
+# Install Goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest && \
+	cp /root/go/bin/goose /usr/local/bin/goose
+
+# Set the working directory
+WORKDIR /migrations
+
+COPY data /migrations/data/
+COPY Makefile /migrations/Makefile
+
+# Entry point for running migrations
+ENTRYPOINT ["make", "migration-up"]

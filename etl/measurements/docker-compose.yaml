@@ -1,0 +1,9 @@
+services:
+  label-studio:
+    image: heartexlabs/label-studio:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./images:/label-studio/data
+    stdin_open: true
+    tty: true

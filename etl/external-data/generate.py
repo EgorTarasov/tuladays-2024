@@ -28,15 +28,20 @@ possible_diagnosis = [
 def generate_record():
     sex = fake.random_element(elements=("male", "female"))
     fio = fake.name_male() if sex == "male" else fake.name_female()
+    risk = round(fake.random.uniform(0.0, 1.0), 2)
+    if risk < 0.2:
+        diagnosis = ""
+    else:
+        diagnosis = fake.random_element(elements=possible_diagnosis)
     return {
         "external_id": fake.uuid4(),
         "fio": fio,
         "sex": sex,
-        "diagnosis": fake.random_element(elements=possible_diagnosis),
+        "diagnosis": diagnosis,
         "date_of_birth": fake.date_of_birth(maximum_age=100).strftime("%Y-%m-%d"),
         "email": fake.email(),
         "address": fake.address(),
-        "risk_of_hearth_disease": round(fake.random.uniform(0.0, 1.0), 2),
+        "risk_of_hearth_disease": risk,
     }
 
 

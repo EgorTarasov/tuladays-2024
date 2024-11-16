@@ -111,3 +111,19 @@ func (pg *pg) UploadExternalUserData(ctx context.Context, payload models.Externa
 	}
 	return nil
 }
+
+func (pg *pg) AssignUserToDoctor(ctx context.Context, patientID, doctorID int64) error {
+	if err := pg.Queries.AssignUserToDoctor(ctx, db.AssignUserToDoctorParams{
+		PatientID: pgtype.Int8{
+			Int64: patientID,
+			Valid: true,
+		},
+		DoctorID: pgtype.Int8{
+			Int64: doctorID,
+			Valid: true,
+		},
+	}); err != nil {
+		return auth.ErrUnableToAssignUser
+	}
+	return nil
+}

@@ -12,7 +12,7 @@ type Service interface {
 	CreateEmailAccount(ctx context.Context, payload models.CreateUser) (models.AuthToken, error)
 	AuthWithEmail(ctx context.Context, payload models.LoginData) (models.AuthToken, error)
 	AuthWithToken(ctx context.Context, authToken string) error
-	ProcessCSV(ctx context.Context, DataCSV io.Reader) error
+	ProcessCSV(ctx context.Context, DataCSV io.Reader, doctorID int64) error
 }
 
 type service struct {

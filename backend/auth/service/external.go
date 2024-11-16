@@ -14,7 +14,8 @@ import (
 	"github.com/EgorTarasov/tuladays/auth/models"
 )
 
-func (s *service) ProcessCSV(ctx context.Context, reader io.Reader) error {
+func (s *service) ProcessCSV(ctx context.Context, reader io.Reader, doctorID int64) error {
+
 	csvReader := csv.NewReader(reader)
 
 	records, err := csvReader.ReadAll()
@@ -63,6 +64,11 @@ func (s *service) ProcessCSV(ctx context.Context, reader io.Reader) error {
 		if err != nil {
 			log.Err(err).Msg("Could not parse external user")
 			return auth.ErrUnableToAddExtUser
+		}
+		err = s.users.AssignUserToDoctor(ctx, newID, doctorID)
+		if err != nil {
+			log.Err(err).Msg("Could not assign user to doctor")
+			return auth.ErrUnableToAssignUser
 		}
 	}
 	return nil

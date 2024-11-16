@@ -6,6 +6,14 @@ meta {
 
 post {
   url: {{host}}/api/external/upload
-  body: none
-  auth: none
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0Niwicm9sZSI6ImRvY3RvciIsInN1YiI6IjQ2IiwiZXhwIjoxNzMxODUwNzA4fQ.-O28Gu70b3JgjQM02O7hOR8FgFDddC-xS82UYPF7k-w
+}
+
+body:multipart-form {
+  document: @file(/Users/egortarasov/dev/projects/tuladays/etl/external-data/dataset.csv)
 }

@@ -81,3 +81,6 @@ INSERT into external_data (
         diagnosis
     )
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+-- name: AssignUserToDoctor :exec
+INSERT INTO doctors_patients (doctor_id, patient_id)
+VALUES ($1, $2);

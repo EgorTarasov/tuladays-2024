@@ -9,4 +9,5 @@ var (
 	ErrInvalidCredentials  = errors.New("invalid credentials")
 	ErrUnableToDecodeToken = errors.New("unable to decode jwt token")
 	ErrUnableToAddExtUser  = errors.New("unable to add external user")
+	ErrUnableToAssignUser  = errors.New("unable to assign user")
 )

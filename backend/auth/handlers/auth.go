@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	module "github.com/EgorTarasov/tuladays/auth"
+	"github.com/EgorTarasov/tuladays/auth/middleware"
 	"github.com/EgorTarasov/tuladays/auth/service"
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,6 +35,6 @@ func initApi(api fiber.Router, h Handler) error {
 	auth.Post("/login", h.LoginWithEmail)
 
 	external := api.Group("/external")
-	external.Post("/upload", h.UploadExternalData)
+	external.Post("/upload", middleware.RoleMiddleware(module.Doctor), h.UploadExternalData)
 	return nil
 }

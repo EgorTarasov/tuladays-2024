@@ -30,6 +30,21 @@ func (q *Queries) AssignRoleToUser(ctx context.Context, arg AssignRoleToUserPara
 	return i, err
 }
 
+const assignUserToDoctor = `-- name: AssignUserToDoctor :exec
+INSERT INTO doctors_patients (doctor_id, patient_id)
+VALUES ($1, $2)
+`
+
+type AssignUserToDoctorParams struct {
+	DoctorID  pgtype.Int8
+	PatientID pgtype.Int8
+}
+
+func (q *Queries) AssignUserToDoctor(ctx context.Context, arg AssignUserToDoctorParams) error {
+	_, err := q.db.Exec(ctx, assignUserToDoctor, arg.DoctorID, arg.PatientID)
+	return err
+}
+
 const createOAuthProvider = `-- name: CreateOAuthProvider :one
 INSERT INTO oauth_providers (name)
 VALUES ($1)

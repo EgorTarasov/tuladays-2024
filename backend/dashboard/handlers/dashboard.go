@@ -27,5 +27,6 @@ func InitRoutes(api fiber.Router, view fiber.Router, h Handler) error {
 func initApi(api fiber.Router, h Handler) error {
 	dashboard := api.Group("/dashboard")
 	dashboard.Get("/patient/:id", middleware.RoleMiddleware("doctor"), h.GetDashboardForUser)
+	dashboard.Get("/patients", middleware.RoleMiddleware("doctor"), h.GetPatients)
 	return nil
 }

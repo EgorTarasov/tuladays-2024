@@ -1,0 +1,15 @@
+meta {
+  name: patients
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/api/dashboard/patients
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0Niwicm9sZSI6ImRvY3RvciIsInN1YiI6IjQ2IiwiZXhwIjoxNzMxODUwNzA4fQ.-O28Gu70b3JgjQM02O7hOR8FgFDddC-xS82UYPF7k-w
+}

@@ -29,10 +29,33 @@ func (pg *pg) GetPatientById(ctx context.Context, id int64) (models.PatientData,
 	if err != nil {
 		return result, dashboard.ErrPatientNotFound
 	}
-	result.ID = int64(u.ID)
+	result.ID = u.FkUserID.Int64
 	result.FirstName = u.FirstName
 	result.LastName = u.LastName
 	result.MiddleName = u.MiddleName
 	result.Age = uint8(time.Now().Year() - u.Dob.Time.Year())
+	return result, nil
+}
+
+func (pg *pg) GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, offset int) ([]models.PatientData, error) {
+	patients, err := pg.Queries.GetPatientsByDoctorID(ctx, db.GetPatientsByDoctorIDParams{
+		DoctorID: pgtype.Int8{
+			Int64: doctorID,
+			Valid: true,
+		},
+		Limit:  int32(limit),
+		Offset: int32(offset),
+	})
+	if err != nil {
+		return nil, err
+	}
+	result := make([]models.PatientData, len(patients))
+	for i, u := range patients {
+		result[i].ID = u.FkUserID.Int64
+		result[i].FirstName = u.FirstName
+		result[i].LastName = u.LastName
+		result[i].MiddleName = u.MiddleName
+		result[i].Age = uint8(time.Now().Year() - u.Dob.Time.Year())
+	}
 	return result, nil
 }

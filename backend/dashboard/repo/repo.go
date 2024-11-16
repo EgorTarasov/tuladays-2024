@@ -8,9 +8,10 @@ import (
 
 type PatientRepo interface {
 	GetPatientById(ctx context.Context, id int64) (models.PatientData, error)
-	// GetPatients(ctx context.Context, doctorID int64) ([]int64, error)
+	GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, offset int) ([]models.PatientData, error)
 }
 
 type HealthDataRepo interface {
 	GetHeartRateData(ctx context.Context, id int64) (uint8, uint8, uint8, error)
+	GetHeartRateGraph(ctx context.Context, patientID int64) ([]models.Graph, error)
 }

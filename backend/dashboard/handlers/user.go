@@ -35,7 +35,19 @@ func (h *handler) GetDashboardForUser(c *fiber.Ctx) error {
 func (h *handler) GetPatients(c *fiber.Ctx) error {
 	userData := c.Locals("userData").(models.UserData)
 
-	result, err := h.s.GetPatients(c.Context(), userData.UserID)
+	limitStr := c.Query("limit")
+	offsetStr := c.Query("offset")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		limit = 10
+	}
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		offset = 0
+	}
+
+	result, err := h.s.GetPatients(c.Context(), userData.UserID, limit, offset)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

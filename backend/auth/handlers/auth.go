@@ -15,6 +15,7 @@ type Handler interface {
 	RegisterWithEmail(*fiber.Ctx) error
 	LoginWithEmail(*fiber.Ctx) error
 	UploadExternalData(*fiber.Ctx) error
+	MeEndpoint(*fiber.Ctx) error
 }
 
 func NewHandler(s service.Service) Handler {
@@ -33,6 +34,7 @@ func initApi(api fiber.Router, h Handler) error {
 
 	auth.Post("/signup", h.RegisterWithEmail)
 	auth.Post("/login", h.LoginWithEmail)
+	auth.Get("/me", middleware.RoleMiddleware(module.Doctor), h.MeEndpoint)
 
 	external := api.Group("/external")
 	external.Post("/upload", middleware.RoleMiddleware(module.Doctor), h.UploadExternalData)

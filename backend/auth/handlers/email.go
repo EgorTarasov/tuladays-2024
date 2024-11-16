@@ -51,3 +51,8 @@ func (h *handler) LoginWithEmail(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{"access_token": token, "type": "Bearer"})
 }
+
+func (h *handler) MeEndpoint(c *fiber.Ctx) error {
+	user := c.Locals("userData").(models.UserData)
+	return c.JSON(user)
+}

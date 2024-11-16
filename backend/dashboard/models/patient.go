@@ -11,6 +11,7 @@ type PatientData struct {
 	PercentOxygen uint8     `json:"percent_oxygen"`
 	HeartData     HeartData `json:"heart_data"`
 	Graphs        []Graph   `json:"graphs"`
+	Diagnosis     string    `json:"diagnosis"`
 }
 
 type HeartData struct {

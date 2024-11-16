@@ -34,6 +34,7 @@ func (pg *pg) GetPatientById(ctx context.Context, id int64) (models.PatientData,
 	result.LastName = u.LastName
 	result.MiddleName = u.MiddleName
 	result.Age = uint8(time.Now().Year() - u.Dob.Time.Year())
+	result.Diagnosis = u.Diagnosis.String
 	return result, nil
 }
 

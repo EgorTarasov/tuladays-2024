@@ -15,3 +15,11 @@ type HealthDataRepo interface {
 	GetHeartRateData(ctx context.Context, id int64) (uint8, uint8, uint8, error)
 	GetHeartRateGraph(ctx context.Context, patientID int64) ([]models.Graph, error)
 }
+
+type MedicineRepo interface {
+	CreateMedicineRecord(ctx context.Context, payload models.MedicineCreate) (int64, error)
+	GetMedicineRecord(ctx context.Context, id int64) (models.MedicineItem, error)
+	ListAllRecords(ctx context.Context) ([]models.MedicineItem, error)
+	ListForPatient(ctx context.Context, patientID int64) ([]models.MedicineItem, error)
+	AssignMedicine(ctx context.Context, doctorId, patientID, medicineID int64) error
+}

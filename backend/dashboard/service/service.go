@@ -11,17 +11,25 @@ import (
 type service struct {
 	health   repo.HealthDataRepo
 	patients repo.PatientRepo
+	medicine repo.MedicineRepo
 }
 
 type Service interface {
 	GetDashboardForUser(ctx context.Context, id int64) (models.PatientData, error)
 	GetPatients(context.Context, int64, int, int) ([]models.PatientData, error)
+
+	CreateMedicineRecord(ctx context.Context, payload models.MedicineCreate) (int64, error)
+	GetMedicineRecord(ctx context.Context, id int64) (models.MedicineItem, error)
+	ListAllRecords(ctx context.Context) ([]models.MedicineItem, error)
+	ListForPatient(ctx context.Context, patientID int64) ([]models.MedicineItem, error)
+	AssignMedicine(ctx context.Context, doctorId, patientID, medicineID int64) error
 }
 
-func New(healthRepo repo.HealthDataRepo, patients repo.PatientRepo) Service {
+func New(healthRepo repo.HealthDataRepo, patients repo.PatientRepo, medicine repo.MedicineRepo) Service {
 	return &service{
 		health:   healthRepo,
 		patients: patients,
+		medicine: medicine,
 	}
 }
 
@@ -83,4 +91,24 @@ func (s *service) GetPatients(ctx context.Context, doctorID int64, limit, offset
 
 func (s *service) SendNotification(ctx context.Context, id int64) error {
 	return nil
+}
+
+func (s *service) CreateMedicineRecord(ctx context.Context, payload models.MedicineCreate) (int64, error) {
+	return s.medicine.CreateMedicineRecord(ctx, payload)
+}
+
+func (s *service) GetMedicineRecord(ctx context.Context, id int64) (models.MedicineItem, error) {
+	return s.medicine.GetMedicineRecord(ctx, id)
+}
+
+func (s *service) ListAllRecords(ctx context.Context) ([]models.MedicineItem, error) {
+	return s.medicine.ListAllRecords(ctx)
+}
+
+func (s *service) ListForPatient(ctx context.Context, patientID int64) ([]models.MedicineItem, error) {
+	return s.medicine.ListForPatient(ctx, patientID)
+}
+
+func (s *service) AssignMedicine(ctx context.Context, doctorId, patientID, medicineID int64) error {
+	return s.medicine.AssignMedicine(ctx, doctorId, patientID, medicineID)
 }

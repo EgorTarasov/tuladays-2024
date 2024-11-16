@@ -1,5 +1,20 @@
 package models
 
+type PatientCardData struct {
+	UserID       int64        `json:"user_id"`
+	EMIASID      string       `json:"emias_id"`
+	FullName     string       `json:"full_name"`
+	Alert        string       `json:"alert"`
+	Diagnosis    string       `json:"diagnosis"`
+	TelegramLink TelegramLink `json:"telegram_link"`
+}
+
+type TelegramLink struct {
+	Joined      bool   `json:"joined"`
+	Link        string `json:"link"`
+	ConnectLink string `json:"connect_link"`
+}
+
 type PatientData struct {
 	ID            int64     `json:"id"`
 	FirstName     string    `json:"first_name"`

@@ -1,0 +1,30 @@
+meta {
+  name: Create Medicine Record
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/medicine/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Paracetamol",
+    "dosage": {
+      "quantity": 500,
+      "frequencyPerDay": 3
+    },
+    "treatmentDurationDays": 7,
+    "actions": {
+      "addFromLink": "https://example.com/"
+    },
+    "schedule": ["08:00", "14:00", "20:00"]
+  }
+}

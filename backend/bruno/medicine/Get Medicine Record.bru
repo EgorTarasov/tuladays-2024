@@ -1,0 +1,19 @@
+meta {
+  name: Get Medicine Record
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/medicine/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 2
+}
+
+auth:bearer {
+  token: {{token}}
+}

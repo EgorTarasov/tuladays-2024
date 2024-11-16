@@ -8,4 +8,5 @@ var (
 	ErrUserNotFound        = errors.New("user not found")
 	ErrInvalidCredentials  = errors.New("invalid credentials")
 	ErrUnableToDecodeToken = errors.New("unable to decode jwt token")
+	ErrUnableToAddExtUser  = errors.New("unable to add external user")
 )

@@ -155,6 +155,13 @@ async def webhook(request: Request) -> None:
     await dp.feed_update(bot, update)
 
 
+<<<<<<< Updated upstream
+=======
+def process(path) -> dict:
+    return {"bpm": 120, "up": 120, "down": 80}
+
+
+>>>>>>> Stashed changes
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,

@@ -1,11 +1,11 @@
 server:
   port: 9999
-  host: localhost
+  host: 10.0.1.80
   cors:
     - http://localhost:9999
 
 pg:
-  dsn: postgresql://pg-user:pg-password@localhost:5432/tula-dev
+  dsn: postgresql://pg-user:pg-password@10.0.1.80:5432/tula-dev
 
 auth:
   jwt_secret: hello_world

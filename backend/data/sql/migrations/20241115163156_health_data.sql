@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS external_data(
     last_name TEXT NOT NULL,
     middle_name TEXT NOT NULL,
     email TEXT NOT NULL,
+    dob DATE NOT NULL,
     address TEXT NOT NULL,
     risk_of_disease NUMERIC NOT NULL DEFAULT 0.0,
     diagnosis TEXT DEFAULT NULL,

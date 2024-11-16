@@ -142,6 +142,31 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+blood_pressure_notification = f"""
+            # Запрос на измерение давления
+            ## Запрос
+            Пожалуйста, измерьте артериальное давление.  
+            **Ожидаемые значения:**  
+            - Систолическое давление  
+            - Диастолическое давление  
+            """
+
+sugar_notification = f"""
+            # Запрос на измерение сахара в крови
+            ## Запрос
+            Пожалуйста, измерьте уровень сахара в крови.  
+            **Ожидаемые значения:**  
+            - Уровень сахара    
+            """
+
+oxygen_notification = f"""
+            # Запрос на измерение кислорода в крови
+            ## Запрос
+            Пожалуйста, измерьте уровень кислорода в крови.  
+            **Ожидаемые значения:**  
+            - Уровень кислорода
+            """
+
 
 @app.post("/notification")
 async def send_notification(notification: Notification):
@@ -151,13 +176,13 @@ async def send_notification(notification: Notification):
         if not user_id:
             return {"error": "user not found"}
 
-    msg_text = f"""
-            You have selected the following options:
-
-            {notification.type}
-
-            Please let me know if you need any further assistance!
-            """.strip()
+    match notification.type:
+        case "sugar":
+            msg_text = sugar_notification
+        case "oxygen":
+            msg_text = oxygen_notification
+        case "blood_pressure":
+            msg_text = blood_pressure_notification
 
     with db_pool.connection() as conn:
         db.insert_patient_notification(

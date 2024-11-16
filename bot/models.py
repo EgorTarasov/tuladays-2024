@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pydantic import BaseModel
 
 
 @dataclass
@@ -14,9 +15,21 @@ class HeartData:
     heart_rate: int
     systolic_pressure: int
     diastolic_pressure: int
-    # patient_id Int64,
-    # -- external_data (id)
-    # timestamp DateTime DEFAULT now(),
-    # heart_rate UInt32,
-    # systolic_pressure UInt32,
-    # diastolic_pressure UInt32u
+
+
+@dataclass
+class Notification(BaseModel):
+    id: int
+    type: str
+
+
+@dataclass
+class OxygenData:
+    user_id: int
+    oxygen: int
+
+
+@dataclass
+class BloodSugarData:
+    user_id: int
+    blood_sugar: float

@@ -74,7 +74,7 @@ def get_user_id(conn: psycopg.Connection, telegram_id: int) -> int | None:
 
 def insert_patient_notification(conn: psycopg.Connection, payload: PatientNotification):
     query = """
-    INSERT INTO patient_notifications(patient_id, requested_measurement, notification)
+    INSERT into patient_notifications(patient_id, requested_measurement, notification)
     VALUES (%s, %s, %s)
     RETURNING id;
     """

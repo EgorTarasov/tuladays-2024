@@ -32,7 +32,7 @@ services:
       - pg
       - clickhouse
     ports:
-      - "8000:8000"
+      - "9900:8000"
   pg:
     image: pgvector/pgvector:pg17
     container_name: pg
@@ -66,7 +66,7 @@ services:
     build: 
       context: ${PWD}/docker_files/
       dockerfile: grafana.Dockerfile
-    container_name: grafana
+    container_name: tula-grafana
     hostname: grafana
     volumes:
       - ${PWD}/fs/volumes/grafana/datasources:/etc/grafana/provisioning/datasources

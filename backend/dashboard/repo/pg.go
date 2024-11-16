@@ -56,6 +56,7 @@ func (pg *pg) GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, 
 		result[i].FirstName = u.FirstName
 		result[i].LastName = u.LastName
 		result[i].MiddleName = u.MiddleName
+		result[i].Diagnosis = u.Diagnosis.String
 		result[i].Age = uint8(time.Now().Year() - u.Dob.Time.Year())
 	}
 	return result, nil

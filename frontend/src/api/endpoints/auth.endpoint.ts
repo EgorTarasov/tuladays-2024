@@ -1,12 +1,28 @@
+import { z } from "zod";
 import { AuthDto } from "../models/auth.model";
 import api from "../utils";
 
 export namespace AuthEndpoint {
-  export const token = async (username: string, password: string) =>
-    api.post("/auth/token", { username, password }, { schema: AuthDto.Token });
+  export const current = () => api.get("/users/me");
 
-  export const me = async () =>
-    api.get("/users/me", {
-      schema: AuthDto.User,
+  export type LoginTemplate = {
+    email: string;
+    password: string;
+  };
+  export const login = async (v: LoginTemplate) =>
+    api.post("/users/login", v, {
+      schema: AuthDto.Token,
+    });
+
+  export type RegisterTemplate = {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  };
+
+  export const register = async (v: RegisterTemplate) =>
+    api.post("/users/register", v, {
+      schema: AuthDto.Token,
     });
 }

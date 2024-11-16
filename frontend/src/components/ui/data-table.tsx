@@ -10,7 +10,6 @@ import {
   TableFooter,
 } from "./table";
 import { ElementRef, ReactNode, useEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
 import { TooltipProvider } from "./tooltip";
 
 export interface Column<T> {

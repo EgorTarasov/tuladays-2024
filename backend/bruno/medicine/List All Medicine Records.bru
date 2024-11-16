@@ -1,0 +1,15 @@
+meta {
+  name: List All Medicine Records
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/medicine
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

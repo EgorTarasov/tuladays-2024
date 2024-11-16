@@ -1,0 +1,19 @@
+meta {
+  name: List Medicine Records for Patient
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/medicine/patient/:patientID
+  body: none
+  auth: bearer
+}
+
+params:path {
+  patientID: 47
+}
+
+auth:bearer {
+  token: {{token}}
+}

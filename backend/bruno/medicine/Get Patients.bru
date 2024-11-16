@@ -1,0 +1,21 @@
+meta {
+  name: Get Patients
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/dashboard/patients
+  body: none
+  auth: bearer
+}
+
+params:query {
+  doctorID: 
+  ~limit: 
+  ~offset: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -55,3 +55,19 @@ func (h *handler) GetPatients(c *fiber.Ctx) error {
 	}
 	return c.JSON(result)
 }
+
+func (h *handler) GetPatientsList(c *fiber.Ctx) error {
+	// limitStr := c.Query("limit")
+	// offsetStr := c.Query("offset")
+
+	// limit, err := strconv.Atoi(limitStr)
+	// if err != nil {
+	// 	limit = 10
+	// }
+	// offset, err := strconv.Atoi(offsetStr)
+	// if err != nil {
+	// 	offset = 0
+	// }
+
+	return nil
+}

@@ -1,8 +1,30 @@
 import { PatientEndpoint } from "@/api/endpoints/patient.endpoint";
+import { DrugDto } from "@/api/models/drug.model";
 import { Button } from "@/components/ui/button";
+import { Column } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getTimeString, pluralize } from "@/utils/pluralize";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Mail } from "lucide-react";
+
+const drugAssignColumns: Column<DrugDto.Item>[] = [
+  {
+    header: "Лекарство",
+    accessor: (x) => x.name,
+  },
+  {
+    header: "Дозировка",
+    accessor: (x) =>
+      `${x.dosage.quantity} мг, ${x.dosage.frequencyPerDay} ${pluralize(
+        x.dosage.frequencyPerDay,
+        ["раз", "раза", "раз"],
+      )} в день`,
+  },
+  {
+    header: "Курс лечения",
+    accessor: (x) => `${getTimeString(x.treatmentDurationDays)}`,
+  },
+];
 
 const TitleValue = ({
   title,
@@ -62,9 +84,16 @@ const Page = () => {
           <TabsTrigger value="changes">Изменения показателей</TabsTrigger>
           <TabsTrigger value="drugs-assign">Назначение лекарств</TabsTrigger>
           <TabsTrigger value="drugs-consume">Приём лекарств</TabsTrigger>
-          <TabsTrigger value="recommendations">Рекомендации</TabsTrigger>
+          {/* <TabsTrigger value="recommendations">Рекомендации</TabsTrigger> */}
         </TabsList>
         <TabsContent value="changes"></TabsContent>
+        <TabsContent value="drugs-assign"></TabsContent>
+        <TabsContent value="drugs-consume"></TabsContent>
+        {/* <TabsContent value="recommendations">
+          <div className="rounded-xl bg-card p-4">
+            {x.patient.r}
+          </div>
+        </TabsContent> */}
       </Tabs>
     </main>
   );

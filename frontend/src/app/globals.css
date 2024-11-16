@@ -7,7 +7,7 @@
     @apply border-border;
   }
   :root {
-    --background: 210 12.5% 96.86%;
+    --background: 210 40% 96.1%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -33,14 +33,16 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
-  
+
   * {
     @apply border-border;
   }
 
   #app {
     @apply flex flex-col bg-background text-foreground;
-    transition: background-color 150ms, color 150ms;
+    transition:
+      background-color 150ms,
+      color 150ms;
     -webkit-font-smoothing: antialiased;
   }
 }
@@ -76,4 +78,8 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.rdp-vhidden {
+  @apply hidden;
 }

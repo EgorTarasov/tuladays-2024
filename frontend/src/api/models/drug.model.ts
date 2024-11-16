@@ -26,6 +26,7 @@ export namespace DrugDto {
     remindPatient: z.boolean(), // напоминать пациенту
     disableForPatient: z.boolean(), // отключить у пациента
   });
+  export type Item = z.infer<typeof Item>;
 }
 
 const medicineCreate = {

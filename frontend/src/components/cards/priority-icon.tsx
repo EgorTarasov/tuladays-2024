@@ -10,6 +10,8 @@ export const PriorityCard: FC<{ data: Priority; text?: string }> = (x) => {
 
   const isImportant = x.data !== Priority.LOW;
 
+  if (!isImportant) return null;
+
   return (
     <div
       className={cn("flex items-center rounded-sm w-fit py-0.5 px-2 gap-2")}

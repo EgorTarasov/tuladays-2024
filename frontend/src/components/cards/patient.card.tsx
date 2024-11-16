@@ -5,7 +5,7 @@ import { PriorityCard, PriorityIcon } from "./priority-icon";
 import { Priority } from "@/types/priority.type";
 import { Link, useParams } from "@tanstack/react-router";
 import { cn } from "@/utils/cn";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 
 interface Props {
   item: PatientDto.Item;
@@ -36,9 +36,14 @@ export const PatientCard: FC<Props> = observer((x) => {
         </div>
         <PriorityIcon data={Priority.HIGH} />
       </div>
-      {/* <PriorityCard data={Priority.HIGH} text={x.item.diagnosis} /> */}
+      <PriorityCard data={Priority.HIGH} text={x.item.alert} />
       <p className="text-slate-800 text-sm">{x.item.diagnosis}</p>
-      <Button variant="outline">Написать сообщение</Button>
+      <a
+        href={x.item.telegram_link}
+        className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+      >
+        Написать сообщение
+      </a>
     </li>
   );
 });

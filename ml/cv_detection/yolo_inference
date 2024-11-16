@@ -2,16 +2,18 @@ import torch
 from PIL import Image
 from matplotlib import pyplot as plt
 import os
+import cv2
+
 
 class ObjectDetector:
-    def __init__(self, model_path, conf_threshold=0.02):
+    def __init__(self, model_path, conf_threshold=0.25):
         """
-        Инициализация детектора объектов.
+        Инициализация детектора тонометров.
         :param model_path: Путь к обученной модели YOLOv5.
         :param conf_threshold: Порог уверенности для отображения предсказаний.
         """
         self.model_path = model_path
-        self.conf_threshold = conf_threshold # регулируем трешолд, надо пробовать...
+        self.conf_threshold = conf_threshold
         self.model = self.load_model()
 
     def load_model(self):
@@ -21,7 +23,7 @@ class ObjectDetector:
         """
         print(f"Загрузка модели из: {self.model_path}")
         model = torch.hub.load('ultralytics/yolov5', 'custom', path=self.model_path)
-        model.conf = self.conf_threshold
+        model.conf = self.conf_threshold  # Установка порога уверенности
         return model
 
     def predict(self, image_path):
@@ -56,15 +58,46 @@ class ObjectDetector:
         print(detections)
         return detections
 
+    def crop_objects(self, image_path, results, output_dir="cropped_predictions"):
+        """
+        Вырезает объекты на основе предсказаний модели и сохраняет их.
+        :param image_path: Путь к изображению.
+        :param results: Результаты предсказания (DataFrame).
+        :param output_dir: Папка для сохранения вырезанных объектов.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+        image = cv2.imread(image_path)
+        if image is None:
+            print(f"Не удалось загрузить изображение: {image_path}")
+            return
 
-# Пример использования
+        detections = self.get_detections(results)
+        for i, row in detections.iterrows():
+            # Извлекаем координаты bounding box
+            x1, y1, x2, y2 = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
+            confidence = row['confidence']
+            cls = int(row['class'])
+            label = row['name']
+
+            # Вырезаем объект
+            cropped_object = image[y1:y2, x1:x2]
+
+            # Сохраняем вырезанный объект
+            cropped_image_name = f"{os.path.splitext(os.path.basename(image_path))[0]}_class{cls}_conf{confidence:.2f}_obj{i}.jpg"
+            cropped_image_path = os.path.join(output_dir, cropped_image_name)
+            cv2.imwrite(cropped_image_path, cropped_object)
+            print(f"Сохранен объект: {cropped_image_path}")
+
+
 if __name__ == "__main__":
-    # Инициализация детектора
-    model_path = 'yolov5/runs/train/exp3/weights/best.pt'# здесь путь до весов будет
-    image_path = 'photo_2024-11-16_13-23-00.jpg' # пример
-    detector = ObjectDetector(model_path=model_path, conf_threshold=0.02)
+    model_path = 'yolov5/runs/train/exp4/weights/best.pt'
+    image_path = 'photo_2024-11-16_10-25-20.jpg'
+    detector = ObjectDetector(model_path=model_path, conf_threshold=0.2)
 
     results = detector.predict(image_path)
 
     detector.visualize(results, save_dir="output_results")
+
     detections = detector.get_detections(results)
+
+    detector.crop_objects(image_path, results, output_dir="cropped_predictions")

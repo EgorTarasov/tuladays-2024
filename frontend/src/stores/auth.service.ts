@@ -34,7 +34,7 @@ class AuthServiceViewModel {
   login = async (v: AuthEndpoint.LoginTemplate): Promise<boolean> => {
     try {
       const token = await AuthEndpoint.login(v);
-      authToken.set(token.accessToken);
+      authToken.set(token.access_token);
 
       const user = await AuthEndpoint.current();
       this.auth = { state: "authenticated", user };
@@ -51,7 +51,7 @@ class AuthServiceViewModel {
   register = async (v: AuthEndpoint.RegisterTemplate): Promise<boolean> => {
     try {
       const token = await AuthEndpoint.register(v);
-      authToken.set(token.accessToken);
+      authToken.set(token.access_token);
 
       const user = await AuthEndpoint.current();
       this.auth = { state: "authenticated", user };

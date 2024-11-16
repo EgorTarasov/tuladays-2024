@@ -13,8 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as AuthIndexImport } from './routes/_auth/index'
+import { Route as DoctorImport } from './routes/_doctor'
+import { Route as DoctorIndexImport } from './routes/_doctor/index'
+import { Route as DoctorPatientIdImport } from './routes/_doctor/patient/$id'
 
 // Create/Update Routes
 
@@ -30,26 +31,32 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthRoute = AuthImport.update({
-  id: '/_auth',
+const DoctorRoute = DoctorImport.update({
+  id: '/_doctor',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthIndexRoute = AuthIndexImport.update({
+const DoctorIndexRoute = DoctorIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => DoctorRoute,
+} as any)
+
+const DoctorPatientIdRoute = DoctorPatientIdImport.update({
+  id: '/patient/$id',
+  path: '/patient/$id',
+  getParentRoute: () => DoctorRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
+    '/_doctor': {
+      id: '/_doctor'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthImport
+      preLoaderRoute: typeof DoctorImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -66,66 +73,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/': {
-      id: '/_auth/'
+    '/_doctor/': {
+      id: '/_doctor/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof DoctorIndexImport
+      parentRoute: typeof DoctorImport
+    }
+    '/_doctor/patient/$id': {
+      id: '/_doctor/patient/$id'
+      path: '/patient/$id'
+      fullPath: '/patient/$id'
+      preLoaderRoute: typeof DoctorPatientIdImport
+      parentRoute: typeof DoctorImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthRouteChildren {
-  AuthIndexRoute: typeof AuthIndexRoute
+interface DoctorRouteChildren {
+  DoctorIndexRoute: typeof DoctorIndexRoute
+  DoctorPatientIdRoute: typeof DoctorPatientIdRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthIndexRoute: AuthIndexRoute,
+const DoctorRouteChildren: DoctorRouteChildren = {
+  DoctorIndexRoute: DoctorIndexRoute,
+  DoctorPatientIdRoute: DoctorPatientIdRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const DoctorRouteWithChildren =
+  DoctorRoute._addFileChildren(DoctorRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '': typeof AuthRouteWithChildren
+  '': typeof DoctorRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/': typeof AuthIndexRoute
+  '/': typeof DoctorIndexRoute
+  '/patient/$id': typeof DoctorPatientIdRoute
 }
 
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/': typeof AuthIndexRoute
+  '/': typeof DoctorIndexRoute
+  '/patient/$id': typeof DoctorPatientIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
+  '/_doctor': typeof DoctorRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_auth/': typeof AuthIndexRoute
+  '/_doctor/': typeof DoctorIndexRoute
+  '/_doctor/patient/$id': typeof DoctorPatientIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/login' | '/register' | '/'
+  fullPaths: '' | '/login' | '/register' | '/' | '/patient/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/'
-  id: '__root__' | '/_auth' | '/login' | '/register' | '/_auth/'
+  to: '/login' | '/register' | '/' | '/patient/$id'
+  id:
+    | '__root__'
+    | '/_doctor'
+    | '/login'
+    | '/register'
+    | '/_doctor/'
+    | '/_doctor/patient/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
+  DoctorRoute: typeof DoctorRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthRoute: AuthRouteWithChildren,
+  DoctorRoute: DoctorRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
@@ -142,15 +168,16 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_auth",
+        "/_doctor",
         "/login",
         "/register"
       ]
     },
-    "/_auth": {
-      "filePath": "_auth.tsx",
+    "/_doctor": {
+      "filePath": "_doctor.tsx",
       "children": [
-        "/_auth/"
+        "/_doctor/",
+        "/_doctor/patient/$id"
       ]
     },
     "/login": {
@@ -159,9 +186,13 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.tsx"
     },
-    "/_auth/": {
-      "filePath": "_auth/index.tsx",
-      "parent": "/_auth"
+    "/_doctor/": {
+      "filePath": "_doctor/index.tsx",
+      "parent": "/_doctor"
+    },
+    "/_doctor/patient/$id": {
+      "filePath": "_doctor/patient/$id.tsx",
+      "parent": "/_doctor"
     }
   }
 }

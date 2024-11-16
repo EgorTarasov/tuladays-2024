@@ -3,7 +3,7 @@ import { buildQueryString, Search } from "./build-search";
 import { authToken } from "./auth-token";
 import { toast } from "sonner";
 
-const baseUrl = import.meta.env.VITE_API_URL || "https://tula.larek.tech/api";
+const baseUrl = "/api";
 
 type Schema = z.ZodType<any, any, any>;
 type Path = `/${string}`;

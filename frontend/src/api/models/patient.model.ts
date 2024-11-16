@@ -19,14 +19,14 @@ export namespace PatientDto {
   // Schema for each graph
   export const GraphSchema = z.object({
     title: z.string(), // Title of the graph
-    data: z.array(GraphDataPointSchema), // Array of data points
+    data: z.array(GraphDataPointSchema).nullable(), // Array of data points
     x_axis: z.string(), // Label for the X-axis
     y_axis: z.string(), // Label for the Y-axis
   });
   export type Graph = z.infer<typeof GraphSchema>;
 
   // Schema for the main object
-  export const ItemSchema = z.object({
+  export const Item = z.object({
     id: z.number(), // ID of the record
     first_name: z.string(), // First name
     last_name: z.string(), // Last name
@@ -37,6 +37,14 @@ export namespace PatientDto {
     percent_oxygen: z.number(), // Percent oxygen saturation
     heart_data: HeartDataSchema, // Heart data object
     graphs: z.array(GraphSchema), // Array of graphs
+    diagnosis: z.string().optional(), // Diagnosis
   });
-  export type Item = z.infer<typeof ItemSchema>;
+  export type Item = z.infer<typeof Item>;
+
+  export const Create = z.object({
+    first_name: z.string(),
+    last_name: z.string(),
+    middle_name: z.string(),
+  });
+  export type Create = z.infer<typeof Create>;
 }

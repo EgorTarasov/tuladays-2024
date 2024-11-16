@@ -3,14 +3,14 @@ import { AuthDto } from "../models/auth.model";
 import api from "../utils";
 
 export namespace AuthEndpoint {
-  export const current = () => api.get("/users/me");
+  export const current = () => api.get("/auth/me");
 
   export type LoginTemplate = {
     email: string;
     password: string;
   };
   export const login = async (v: LoginTemplate) =>
-    api.post("/users/login", v, {
+    api.post("/auth/login", v, {
       schema: AuthDto.Token,
     });
 
@@ -22,7 +22,7 @@ export namespace AuthEndpoint {
   };
 
   export const register = async (v: RegisterTemplate) =>
-    api.post("/users/register", v, {
+    api.post("/auth/register", v, {
       schema: AuthDto.Token,
     });
 }

@@ -23,6 +23,7 @@ type ExternalDatum struct {
 	FirstName     string
 	LastName      string
 	MiddleName    string
+	Sex           string
 	Email         string
 	Dob           pgtype.Date
 	Address       string

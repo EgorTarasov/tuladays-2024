@@ -270,3 +270,39 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	}
 	return items, nil
 }
+
+const uploadExternalUserData = `-- name: UploadExternalUserData :exec
+INSERT into external_data (external_id, fk_user_id, first_name, last_name, middle_name, sex, dob, email, address, risk_of_disease, diagnosis)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+`
+
+type UploadExternalUserDataParams struct {
+	ExternalID    string
+	FkUserID      pgtype.Int8
+	FirstName     string
+	LastName      string
+	MiddleName    string
+	Sex           string
+	Dob           pgtype.Date
+	Email         string
+	Address       string
+	RiskOfDisease pgtype.Numeric
+	Diagnosis     pgtype.Text
+}
+
+func (q *Queries) UploadExternalUserData(ctx context.Context, arg UploadExternalUserDataParams) error {
+	_, err := q.db.Exec(ctx, uploadExternalUserData,
+		arg.ExternalID,
+		arg.FkUserID,
+		arg.FirstName,
+		arg.LastName,
+		arg.MiddleName,
+		arg.Sex,
+		arg.Dob,
+		arg.Email,
+		arg.Address,
+		arg.RiskOfDisease,
+		arg.Diagnosis,
+	)
+	return err
+}

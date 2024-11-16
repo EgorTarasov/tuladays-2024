@@ -12,7 +12,7 @@ import (
 )
 
 const getPatientById = `-- name: GetPatientById :one
-SELECT id, user_id, external_id, first_name, last_name, middle_name, email, dob, address, risk_of_disease, diagnosis, fk_user_id, created_at, updated_at, deleted_at from external_data
+SELECT id, user_id, external_id, first_name, last_name, middle_name, sex, email, dob, address, risk_of_disease, diagnosis, fk_user_id, created_at, updated_at, deleted_at from external_data
 WHERE user_id = $1 LIMIT 1
 `
 
@@ -26,6 +26,7 @@ func (q *Queries) GetPatientById(ctx context.Context, userID pgtype.Int8) (Exter
 		&i.FirstName,
 		&i.LastName,
 		&i.MiddleName,
+		&i.Sex,
 		&i.Email,
 		&i.Dob,
 		&i.Address,

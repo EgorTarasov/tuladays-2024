@@ -1,4 +1,5 @@
 -- +goose Up
+
 -- +goose StatementBegin
 SELECT 'up SQL query';
 CREATE TABLE IF NOT EXISTS chat (

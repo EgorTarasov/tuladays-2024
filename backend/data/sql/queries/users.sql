@@ -62,3 +62,6 @@ FROM users u
     LEFT JOIN user_roles ur ON u.id = ur.user_id
     LEFT JOIN roles r ON ur.role_id = r.id
 WHERE u.email = $1;
+-- name: UploadExternalUserData :exec
+INSERT into external_data (external_id, fk_user_id, first_name, last_name, middle_name, sex, dob, email, address, risk_of_disease, diagnosis)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);

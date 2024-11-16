@@ -34,6 +34,20 @@ type User struct {
 	Role         string
 }
 
+type ExternalData struct {
+	UserID        int64
+	ExternalID    string
+	FirstName     string
+	LastName      string
+	MiddleName    string
+	Sex           string
+	Dob           time.Time
+	Email         string
+	Address       string
+	RiskOfDisease float64
+	Diagnosis     string
+}
+
 type Password string
 
 func NewHashedPassword(v string) (Password, error) {

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS external_data(
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     middle_name TEXT NOT NULL,
+    sex TEXT NOT NULL,
     email TEXT NOT NULL,
     dob DATE NOT NULL,
     address TEXT NOT NULL,

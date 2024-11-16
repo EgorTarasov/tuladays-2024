@@ -13,14 +13,14 @@ func (a *service) CreateEmailAccount(ctx context.Context, payload models.CreateU
 		return "", err // TODO: define error
 	}
 
-	newID, err := a.users.CreateUser(ctx, payload.Email, password)
+	newID, err := a.users.CreateUser(ctx, payload.Email, password, auth.Doctor)
 	if err != nil {
 		return "", err // TODO: define error
 	}
 
 	token, err := models.NewAuthToken(models.UserData{
 		UserID: newID,
-		Role:   "user",
+		Role:   auth.Doctor,
 	}, a.tokenSecret)
 	if err != nil {
 		return "", err

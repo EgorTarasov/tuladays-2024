@@ -1,3 +1,6 @@
+volumes:
+  pg_admin:
+
 services:
   backend:
     image: ghcr.io/egortarasov/tuladays-2024/backend:latest
@@ -32,7 +35,7 @@ services:
       - pg
       - clickhouse
     ports:
-      - "8000:8000"
+      - "9900:8000"
   pg:
     image: pgvector/pgvector:pg17
     container_name: pg
@@ -51,6 +54,18 @@ services:
       timeout: 5s
       retries: 5
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-tarasov.egor.yandex@gmail.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-cisco}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pg_admin:/var/lib/pgadmin
+    ports:
+      - "8888:80"
+
   clickhouse:
     image: clickhouse/clickhouse-server
     user: "101:101"
@@ -66,7 +81,7 @@ services:
     build: 
       context: ${PWD}/docker_files/
       dockerfile: grafana.Dockerfile
-    container_name: grafana
+    container_name: tula-grafana
     hostname: grafana
     volumes:
       - ${PWD}/fs/volumes/grafana/datasources:/etc/grafana/provisioning/datasources

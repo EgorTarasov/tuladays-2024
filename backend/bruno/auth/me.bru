@@ -1,0 +1,15 @@
+meta {
+  name: me
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{host}}/api/auth/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0Niwicm9sZSI6ImRvY3RvciIsInN1YiI6IjQ2IiwiZXhwIjoxNzMxODUwNzA4fQ.-O28Gu70b3JgjQM02O7hOR8FgFDddC-xS82UYPF7k-w
+}

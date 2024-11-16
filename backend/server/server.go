@@ -14,6 +14,11 @@ import (
 	authService "github.com/EgorTarasov/tuladays/auth/service"
 	chatHandlers "github.com/EgorTarasov/tuladays/chat/handlers"
 	chatService "github.com/EgorTarasov/tuladays/chat/service"
+
+	dashboardHandlers "github.com/EgorTarasov/tuladays/dashboard/handlers"
+	dashboardRepo "github.com/EgorTarasov/tuladays/dashboard/repo"
+	dashboardService "github.com/EgorTarasov/tuladays/dashboard/service"
+	"github.com/EgorTarasov/tuladays/pkg/click"
 	"github.com/EgorTarasov/tuladays/pkg/postgres"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -65,6 +70,10 @@ func NewServer(cfg *Config) Server {
 	if err != nil {
 		panic(err)
 	}
+	ch, err := click.InitClick(context.Background(), cfg.Click)
+	if err != nil {
+		panic(err)
+	}
 
 	userRepo := authRepo.NewPgRepo(pool)
 
@@ -76,6 +85,13 @@ func NewServer(cfg *Config) Server {
 	chatService := chatService.NewChatService()
 	chatHandler := chatHandlers.NewChatHandlers(chatService)
 	chatHandlers.InitRoutes(api, views, chatHandler)
+
+	patientRepo := dashboardRepo.NewPgRepo(pool)
+	healthDataRepo := dashboardRepo.NewHealthData(ch)
+
+	dashboardService := dashboardService.New(healthDataRepo, patientRepo)
+	dashboardHandler := dashboardHandlers.NewHandler(dashboardService)
+	dashboardHandlers.InitRoutes(api, views, dashboardHandler)
 
 	go chatHandler.HandleMessages()
 

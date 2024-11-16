@@ -31,6 +31,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 POSTGRES_DSN = os.getenv("POSTGRES_DSN")
 CLICKHOUSE_DSN = os.getenv("CLICKHOUSE_DSN")
 
+
 if not BOT_TOKEN or not POSTGRES_DSN or not CLICKHOUSE_DSN:
     exit(-1)
 
@@ -73,31 +74,56 @@ async def get_photo(message: types.Message):
         )
 
 
-@dp.message(CommandStart(deep_link=True))
+@dp.message(CommandStart())
 async def start(message: types.Message, command: CommandObject):
+    await message.reply(
+        "Вам не назначен курс обследования. Пожалуйста обратитесь к вашему врачу"
+    )
+    return
+
+
+@dp.message(CommandStart(deep_link=True))
+async def deeplink_start(message: types.Message, command: CommandObject):
+    print("new message!")
     if not message.from_user:
         await message.reply("невалидная ссылка.")
         return
 
     args = command.args
+
     # payload = decode_payload(args)
     # convert args to int
     if not args:
         await message.reply("невалидная ссылка..")
         return
+
+    with db_pool.connection() as conn:
+        query = """
+        SELECT * from users
+        WHERE id IN (%s);
+        """
+        result = conn.execute(
+            query,
+            ((args),),
+        ).fetchall()
+        if len(result) == 0:
+            await message.reply(
+                "Пользователь с таким id не найден в базе. Обратитесь к лечащему врачу"
+            )
+            return
+
     try:
         user_code = int(args)
     except Exception as e:
         await message.reply("невалидная ссылка...")
         return
 
-    with db_pool.connection() as conn:
-        user_id = db.insert_user_data(conn, message.from_user, user_code)
-        if user_id:
-            await message.reply(
-                f"Привет! {message.from_user.username} теперь я буду тебя знать! и в случае чего свяжусь с тобой!"
-            )
-            return
+    user_id = db.insert_user_data(conn, message.from_user, user_code)
+    if user_id:
+        await message.reply(
+            f"Привет! {message.from_user.username} теперь я буду тебя знать! и в случае чего свяжусь с тобой!"
+        )
+        return
 
     await message.reply("что-то пошло не так свяжитесь с администратором")
 
@@ -155,13 +181,6 @@ async def webhook(request: Request) -> None:
     await dp.feed_update(bot, update)
 
 
-<<<<<<< Updated upstream
-=======
-def process(path) -> dict:
-    return {"bpm": 120, "up": 120, "down": 80}
-
-
->>>>>>> Stashed changes
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,

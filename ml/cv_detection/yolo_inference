@@ -1,0 +1,70 @@
+import torch
+from PIL import Image
+from matplotlib import pyplot as plt
+import os
+
+class ObjectDetector:
+    def __init__(self, model_path, conf_threshold=0.02):
+        """
+        Инициализация детектора объектов.
+        :param model_path: Путь к обученной модели YOLOv5.
+        :param conf_threshold: Порог уверенности для отображения предсказаний.
+        """
+        self.model_path = model_path
+        self.conf_threshold = conf_threshold # регулируем трешолд, надо пробовать...
+        self.model = self.load_model()
+
+    def load_model(self):
+        """
+        Загружает YOLOv5 модель.
+        :return: Загруженная модель YOLOv5.
+        """
+        print(f"Загрузка модели из: {self.model_path}")
+        model = torch.hub.load('ultralytics/yolov5', 'custom', path=self.model_path)
+        model.conf = self.conf_threshold
+        return model
+
+    def predict(self, image_path):
+        """
+        Выполняет предсказание для изображения.
+        :param image_path: Путь к изображению.
+        :return: Результаты предсказания (DataFrame).
+        """
+        print(f"Выполняется предсказание для изображения: {image_path}")
+        results = self.model(image_path)
+        results.print()
+        return results
+
+    def visualize(self, results, save_dir="results"):
+        """
+        Отображает и сохраняет результаты предсказания.
+        :param results: Результаты предсказания.
+        :param save_dir: Папка для сохранения визуализации.
+        """
+        results.show()
+        results.save(save_dir=save_dir)  # Сохраняет результаты
+        print(f"Результаты сохранены в папку: {save_dir}")
+
+    def get_detections(self, results):
+        """
+        Получает предсказания в формате DataFrame.
+        :param results: Результаты предсказания.
+        :return: DataFrame с детекциями.
+        """
+        detections = results.pandas().xyxy[0]
+        print("Детекции:")
+        print(detections)
+        return detections
+
+
+# Пример использования
+if __name__ == "__main__":
+    # Инициализация детектора
+    model_path = 'yolov5/runs/train/exp3/weights/best.pt'# здесь путь до весов будет
+    image_path = 'photo_2024-11-16_13-23-00.jpg' # пример
+    detector = ObjectDetector(model_path=model_path, conf_threshold=0.02)
+
+    results = detector.predict(image_path)
+
+    detector.visualize(results, save_dir="output_results")
+    detections = detector.get_detections(results)

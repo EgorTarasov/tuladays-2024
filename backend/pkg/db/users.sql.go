@@ -113,6 +113,19 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const getRoleIdByName = `-- name: GetRoleIdByName :one
+SELECT r.id
+FROM roles r
+where r.name = $1
+`
+
+func (q *Queries) GetRoleIdByName(ctx context.Context, name string) (int32, error) {
+	row := q.db.QueryRow(ctx, getRoleIdByName, name)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
 const getUserWithRoles = `-- name: GetUserWithRoles :one
 SELECT u.id,
     u.email,
@@ -272,7 +285,19 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 }
 
 const uploadExternalUserData = `-- name: UploadExternalUserData :exec
-INSERT into external_data (external_id, fk_user_id, first_name, last_name, middle_name, sex, dob, email, address, risk_of_disease, diagnosis)
+INSERT into external_data (
+        external_id,
+        fk_user_id,
+        first_name,
+        last_name,
+        middle_name,
+        sex,
+        dob,
+        email,
+        address,
+        risk_of_disease,
+        diagnosis
+    )
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 `
 

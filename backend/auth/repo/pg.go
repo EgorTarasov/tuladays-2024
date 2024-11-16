@@ -9,6 +9,7 @@ import (
 	"github.com/EgorTarasov/tuladays/pkg/db"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 type pg struct {
@@ -23,7 +24,13 @@ func NewPgRepo(pool *pgxpool.Pool) UserRepo {
 	}
 }
 
-func (pg *pg) CreateUser(ctx context.Context, email string, password models.Password) (int64, error) {
+func (pg *pg) CreateUser(ctx context.Context, email string, password models.Password, roles ...auth.UserRole) (int64, error) {
+	tx, err := pg.pool.Begin(ctx)
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback(ctx)
+
 	u, err := pg.Queries.CreateUser(ctx, db.CreateUserParams{
 		Email: email,
 		PasswordHash: pgtype.Text{
@@ -34,7 +41,26 @@ func (pg *pg) CreateUser(ctx context.Context, email string, password models.Pass
 	if err != nil {
 		return 0, err
 	}
-	return int64(u.ID), nil
+
+	if len(roles) > 0 {
+		for _, role := range roles {
+			// check if role exists in the database
+			roleID, err := pg.Queries.GetRoleIdByName(ctx, string(role))
+			if err != nil {
+				log.Err(err).Msg("role not found")
+				continue
+			}
+			_, err = pg.Queries.AssignRoleToUser(ctx, db.AssignRoleToUserParams{
+				UserID: u.ID,
+				RoleID: roleID,
+			})
+			if err != nil {
+				log.Err(err).Str("role", string(role)).Msg("unable to assign role to user")
+				continue
+			}
+		}
+	}
+	return int64(u.ID), tx.Commit(ctx)
 }
 
 func (pg *pg) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
@@ -48,7 +74,7 @@ func (pg *pg) GetUserByEmail(ctx context.Context, email string) (*models.User, e
 		PasswordHash: models.Password(u.PasswordHash.String),
 		CreatedAt:    u.CreatedAt.Time,
 		UpdatedAt:    u.UpdatedAt.Time,
-		Role:         u.Role.String,
+		Role:         auth.UserRole(u.Role.String),
 	}, nil
 }
 

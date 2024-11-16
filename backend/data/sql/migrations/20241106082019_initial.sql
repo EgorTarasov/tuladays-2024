@@ -40,6 +40,10 @@ CREATE INDEX idx_oauth_users_user_id ON oauth_users(user_id);
 CREATE INDEX idx_oauth_users_provider_id ON oauth_users(provider_id);
 CREATE INDEX idx_user_roles_user_id ON user_roles(user_id);
 CREATE INDEX idx_user_roles_role_id ON user_roles(role_id);
+insert into roles(name)
+values('doctor');
+insert into roles(name)
+values('patient');
 -- +goose StatementEnd
 -- +goose Down
 -- +goose StatementBegin

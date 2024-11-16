@@ -28,7 +28,7 @@ func (s *service) ProcessCSV(ctx context.Context, reader io.Reader) error {
 			log.Err(err).Msg("Could not hash password")
 			return auth.ErrUnableToAddExtUser
 		}
-		newID, err := s.users.CreateUser(ctx, email, pwd)
+		newID, err := s.users.CreateUser(ctx, email, pwd, auth.Patient)
 		if err != nil {
 			log.Err(err).Msg("Could not create external user")
 			return auth.ErrUnableToAddExtUser

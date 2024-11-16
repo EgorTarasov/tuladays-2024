@@ -16,6 +16,15 @@ type Chat struct {
 	DeletedAt pgtype.Timestamp
 }
 
+type DoctorsPatient struct {
+	ID        int64
+	DoctorID  pgtype.Int8
+	PatientID pgtype.Int8
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+	DeletedAt pgtype.Timestamp
+}
+
 type ExternalDatum struct {
 	ID            int64
 	UserID        pgtype.Int8

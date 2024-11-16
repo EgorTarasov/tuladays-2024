@@ -8,6 +8,7 @@ import (
 
 type PatientRepo interface {
 	GetPatientById(ctx context.Context, id int64) (models.PatientData, error)
+	// GetPatients(ctx context.Context, doctorID int64) ([]int64, error)
 }
 
 type HealthDataRepo interface {

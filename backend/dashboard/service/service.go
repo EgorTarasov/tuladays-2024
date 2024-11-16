@@ -14,6 +14,7 @@ type service struct {
 
 type Service interface {
 	GetDashboardForUser(ctx context.Context, id int64) (models.PatientData, error)
+	GetPatients(context.Context, int64) ([]models.PatientData, error)
 }
 
 func New(healthRepo repo.HealthDataRepo, patients repo.PatientRepo) Service {
@@ -42,4 +43,12 @@ func (s *service) GetDashboardForUser(ctx context.Context, id int64) (models.Pat
 	}
 
 	return patientData, nil
+}
+
+func (s *service) GetPatients(ctx context.Context, doctorID int64) ([]models.PatientData, error) {
+	return nil, nil
+}
+
+func (s *service) SendNotification(ctx context.Context, id int64) error {
+	return nil
 }

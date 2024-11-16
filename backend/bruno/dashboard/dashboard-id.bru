@@ -7,9 +7,13 @@ meta {
 get {
   url: {{host}}/api/dashboard/patient/:id
   body: none
-  auth: none
+  auth: bearer
 }
 
 params:path {
-  id: 1
+  id: 42
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0Niwicm9sZSI6ImRvY3RvciIsInN1YiI6IjQ2IiwiZXhwIjoxNzMxODUwNzA4fQ.-O28Gu70b3JgjQM02O7hOR8FgFDddC-xS82UYPF7k-w
 }

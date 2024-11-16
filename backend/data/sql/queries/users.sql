@@ -23,6 +23,10 @@ INSERT INTO roles (name)
 VALUES ($1)
 RETURNING id,
     name;
+-- name: GetRoleIdByName :one
+SELECT r.id
+FROM roles r
+where r.name = $1;
 -- name: AssignRoleToUser :one
 INSERT INTO user_roles (user_id, role_id)
 VALUES ($1, $2)
@@ -63,5 +67,17 @@ FROM users u
     LEFT JOIN roles r ON ur.role_id = r.id
 WHERE u.email = $1;
 -- name: UploadExternalUserData :exec
-INSERT into external_data (external_id, fk_user_id, first_name, last_name, middle_name, sex, dob, email, address, risk_of_disease, diagnosis)
+INSERT into external_data (
+        external_id,
+        fk_user_id,
+        first_name,
+        last_name,
+        middle_name,
+        sex,
+        dob,
+        email,
+        address,
+        risk_of_disease,
+        diagnosis
+    )
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);

@@ -11,8 +11,8 @@ import (
 )
 
 type UserData struct {
-	UserID int64  `json:"user_id"`
-	Role   string `json:"role"`
+	UserID int64         `json:"user_id"`
+	Role   auth.UserRole `json:"role"`
 }
 
 type CreateUser struct {
@@ -31,7 +31,7 @@ type User struct {
 	PasswordHash Password
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
-	Role         string
+	Role         auth.UserRole
 }
 
 type ExternalData struct {
@@ -105,16 +105,16 @@ func (at AuthToken) Validate(secret string) error {
 	return nil
 }
 
-func (at AuthToken) Decode() (*UserData, error) {
+func (at AuthToken) Decode() (result UserData, err error) {
 	token, _, err := new(jwt.Parser).ParseUnverified(string(at), &claims{})
 	if err != nil {
-		return nil, auth.ErrUnableToDecodeToken
+		return result, auth.ErrUnableToDecodeToken
 	}
 
 	claims, ok := token.Claims.(*claims)
 	if !ok {
-		return nil, auth.ErrUnableToDecodeToken
+		return result, auth.ErrUnableToDecodeToken
 	}
 
-	return &claims.UserData, nil
+	return claims.UserData, nil
 }

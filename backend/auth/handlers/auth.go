@@ -12,6 +12,7 @@ type handler struct {
 type Handler interface {
 	RegisterWithEmail(*fiber.Ctx) error
 	LoginWithEmail(*fiber.Ctx) error
+	UploadExternalData(*fiber.Ctx) error
 }
 
 func NewHandler(s service.Service) Handler {
@@ -30,5 +31,8 @@ func initApi(api fiber.Router, h Handler) error {
 
 	auth.Post("/signup", h.RegisterWithEmail)
 	auth.Post("/login", h.LoginWithEmail)
+
+	external := api.Group("/external")
+	external.Post("/upload", h.UploadExternalData)
 	return nil
 }

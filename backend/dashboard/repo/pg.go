@@ -16,16 +16,16 @@ type pg struct {
 	pool *pgxpool.Pool
 }
 
-func NewPgRepo(pool *pgxpool.Pool) UserRepo {
+func NewPgRepo(pool *pgxpool.Pool) PatientRepo {
 	return &pg{
 		Queries: db.New(pool),
 		pool:    pool,
 	}
 }
 
-func (pg *pg) GetPatientById(ctx context.Context, id int64) (models.UserData, error) {
+func (pg *pg) GetPatientById(ctx context.Context, id int64) (models.PatientData, error) {
 	u, err := pg.Queries.GetPatientById(ctx, pgtype.Int8{Int64: id, Valid: true})
-	var result models.UserData
+	var result models.PatientData
 	if err != nil {
 		return result, dashboard.ErrPatientNotFound
 	}

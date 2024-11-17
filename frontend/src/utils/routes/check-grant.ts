@@ -13,3 +13,37 @@ export const checkAuth = (v: { location: { href: string } }) => {
     },
   });
 };
+
+export const checkDoctor = (v: { location: { href: string } }) => {
+  if (AuthService.auth.state !== "authenticated") {
+    throw redirect({
+      to: "/login",
+      search: {
+        redirect: v.location.href,
+      },
+    });
+  }
+
+  if (AuthService.auth.user.role !== "doctor") {
+    throw redirect({
+      to: "/",
+    });
+  }
+};
+
+export const checkPatient = (v: { location: { href: string } }) => {
+  if (AuthService.auth.state !== "authenticated") {
+    throw redirect({
+      to: "/login",
+      search: {
+        redirect: v.location.href,
+      },
+    });
+  }
+
+  if (AuthService.auth.user.role !== "patient") {
+    throw redirect({
+      to: "/",
+    });
+  }
+};

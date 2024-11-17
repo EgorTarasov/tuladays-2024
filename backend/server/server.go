@@ -60,11 +60,12 @@ func NewServer(cfg *Config) Server {
 	app.Static("/", "./static")
 	// Catch-all route to redirect to "/" for SPA
 	app.Use(func(c *fiber.Ctx) error {
-
+		// If the request path starts with /api, continue to the next handler
 		if len(c.Path()) >= 4 && c.Path()[:4] == "/api" {
 			return c.Next()
 		}
-		return c.Redirect("/")
+		// Serve the index.html file for all other routes
+		return c.SendFile("./static/index.html")
 	})
 
 	app.Use(logger.New())

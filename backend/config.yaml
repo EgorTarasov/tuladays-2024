@@ -8,6 +8,9 @@ server:
 pg:
   dsn: postgresql://pg-user:pg-password@10.0.1.80:5432/tula-dev
 
+dashboard:
+  telegram_link: https://t.me/dino_misis_bot?start=
+
 auth:
   jwt_secret: hello_world
 

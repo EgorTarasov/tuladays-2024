@@ -53,6 +53,7 @@ func (pg *pg) GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, 
 	result := make([]models.PatientData, len(patients))
 	for i, u := range patients {
 		result[i].ID = u.FkUserID.Int64
+		result[i].EMIASID = u.ExternalID
 		result[i].FirstName = u.FirstName
 		result[i].LastName = u.LastName
 		result[i].MiddleName = u.MiddleName
@@ -60,4 +61,8 @@ func (pg *pg) GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, 
 		result[i].Age = uint8(time.Now().Year() - u.Dob.Time.Year())
 	}
 	return result, nil
+}
+
+type PatientData struct {
+	Alert string `json:"alert"`
 }

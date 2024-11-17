@@ -57,7 +57,7 @@ export const DrugSelect = observer(
           >
             {value
               ? DrugsStore.drugs.find((drug) => drug.name === value)?.name
-              : "Select drug..."}
+              : "Выберите лекарство..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

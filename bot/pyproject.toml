@@ -6,7 +6,7 @@ authors = ["blank"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11.8"
 aiogram = "^3.14.0"
 fastapi = {extras = ["standard"], version = "^0.115.5"}
 psycopg = {extras = ["pool"], version = "^3.2.3"}
@@ -15,6 +15,8 @@ pandas = "^2.2.3"
 minio = "^7.2.10"
 pillow = "^11.0.0"
 torch = "^2.5.1"
+opencv-python = "^4.10.0.84"
+easyocr = "^1.7.2"
 
 
 [tool.poetry.group.dev.dependencies]

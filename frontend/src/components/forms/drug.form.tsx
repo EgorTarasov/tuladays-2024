@@ -16,10 +16,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { DrugSelect } from "../widgets/drug-select";
 import { useState } from "react";
 import { DrugsStore } from "@/stores/drugs.store";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const DrugForm: ModalFC<{ used: DrugDto.Item[] }, DrugDto.Item> = (
   x,
 ) => {
+  const form = useForm({
+    resolver: zodResolver(DrugDto.Create),
+  });
   const [selectedDrug, setSelectedDrug] = useState<DrugDto.Item | undefined>();
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {

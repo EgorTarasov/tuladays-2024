@@ -19,6 +19,7 @@ import {
   FormControl,
   FormMessage,
   Form,
+  Field,
 } from "@/components/ui/form";
 import { fallback, zodSearchValidator } from "@tanstack/router-zod-adapter";
 
@@ -37,6 +38,8 @@ export const Page = () => {
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
     },
   });
 

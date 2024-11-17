@@ -18,55 +18,22 @@ import { useState } from "react";
 import { DrugsStore } from "@/stores/drugs.store";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Field, Form } from "../ui/form";
+import { X } from "lucide-react";
 
 export const DrugForm: ModalFC<{ used: DrugDto.Item[] }, DrugDto.Item> = (
   x,
 ) => {
-  const form = useForm({
+  const form = useForm<DrugDto.Create>({
     resolver: zodResolver(DrugDto.Create),
+    defaultValues: {
+      schedule: [],
+    },
   });
   const [selectedDrug, setSelectedDrug] = useState<DrugDto.Item | undefined>();
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget as any;
-
-    const name = form.name.value;
-    if (!name.trim()) {
-      toast.error("Название не может быть пустым");
-      return;
-    }
-
-    const dosageQuantity = form.dosageQuantity.value;
-    if (!dosageQuantity.trim() || isNaN(+dosageQuantity)) {
-      toast.error("Неверное значение количества");
-      return;
-    }
-
-    const dosageFrequencyPerDay = form.dosageFrequencyPerDay.value;
-    if (!dosageFrequencyPerDay.trim() || isNaN(+dosageFrequencyPerDay)) {
-      toast.error("Неверное значение частоты");
-      return;
-    }
-
-    const treatmentDurationDays = form.treatmentDurationDays.value;
-    if (!treatmentDurationDays.trim() || isNaN(+treatmentDurationDays)) {
-      toast.error("Неверное значение длительности");
-      return;
-    }
-
-    const create: DrugDto.Create = {
-      name,
-      dosage: {
-        quantity: +dosageQuantity,
-        frequencyPerDay: +dosageFrequencyPerDay,
-      },
-      treatmentDurationDays: +treatmentDurationDays,
-      schedule: [],
-    };
-
-    const created = await DrugEndpoint.create(create);
+  const submit = async (v: DrugDto.Create) => {
+    const created = await DrugEndpoint.create(v);
     const res = await DrugEndpoint.getById(created.id);
     DrugsStore.init();
     x.done(res);
@@ -88,27 +55,105 @@ export const DrugForm: ModalFC<{ used: DrugDto.Item[] }, DrugDto.Item> = (
           </TabsTrigger>
         </TabsList>
         <TabsContent value="new">
-          <form onSubmit={submit} className="flex flex-col gap-4">
-            <Label>
-              Название
-              <Input className="mt-1" name="name" />
-            </Label>
-            <Label>
-              Количество
-              <Input className="mt-1" name="dosageQuantity" />
-            </Label>
-            <Label>
-              Частота
-              <Input className="mt-1" name="dosageFrequencyPerDay" />
-            </Label>
-            <Label>
-              Длительность
-              <Input className="mt-1" name="treatmentDurationDays" />
-            </Label>
-            <DialogFooter>
-              <Button type="submit">Создать</Button>
-            </DialogFooter>
-          </form>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(submit)}
+              className="flex flex-col gap-4"
+            >
+              <Field
+                control={form.control}
+                component={(x) => <Input {...x} />}
+                name="name"
+                label="Название"
+              />
+              <Field
+                control={form.control}
+                component={(x) => (
+                  <Input
+                    {...x}
+                    type="number"
+                    onChange={(v) =>
+                      form.setValue("dosage.quantity", v.target.valueAsNumber)
+                    }
+                  />
+                )}
+                name="dosage.quantity"
+                label="Количество"
+              />
+              <Field
+                control={form.control}
+                component={(x) => (
+                  <Input
+                    {...x}
+                    type="number"
+                    onChange={(v) =>
+                      form.setValue(
+                        "dosage.frequencyPerDay",
+                        v.target.valueAsNumber,
+                      )
+                    }
+                  />
+                )}
+                name="dosage.frequencyPerDay"
+                label="Частота"
+              />
+              <Field
+                control={form.control}
+                component={(x) => (
+                  <Input
+                    {...x}
+                    type="number"
+                    onChange={(v) =>
+                      form.setValue(
+                        "treatmentDurationDays",
+                        v.target.valueAsNumber,
+                      )
+                    }
+                  />
+                )}
+                name="treatmentDurationDays"
+                label="Длительность"
+              />
+              {/* schedule: z.array(z.string().regex(/^\d{2}:\d{2}$/)), // календарь приема лекарства (HH:MM)[] */}
+              <ul className="flex flex-col gap-2">
+                {form.watch("schedule").map((x, i) => (
+                  <li key={i} className="flex items-end gap-2">
+                    <Field
+                      control={form.control}
+                      className="flex-1"
+                      component={(x) => <Input {...x} placeholder="ЧЧ:ММ" />}
+                      name={`schedule.${i}`}
+                      label={`Время приема ${i + 1}`}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        form.setValue(
+                          "schedule",
+                          form.watch("schedule").filter((_, j) => j !== i),
+                        )
+                      }
+                    >
+                      <X />
+                    </Button>
+                  </li>
+                ))}
+                <Button
+                  type="button"
+                  onClick={() =>
+                    form.setValue("schedule", [...form.watch("schedule"), ""])
+                  }
+                >
+                  Добавить время приема
+                </Button>
+              </ul>
+              <DialogFooter>
+                <Button type="submit">Создать</Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </TabsContent>
         <TabsContent value="used">
           <DrugSelect usedDrugs={x.used} onSelect={setSelectedDrug} />

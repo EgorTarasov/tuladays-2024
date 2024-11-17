@@ -12,7 +12,9 @@ export namespace DrugDto {
       frequencyPerDay: z.number().int().min(1),
     }),
     treatmentDurationDays: z.number().int().min(1), // длительность курса лечения
-    schedule: z.array(z.string().regex(/^\d{2}:\d{2}$/)), // календарь приема лекарства (HH:MM)[]
+    schedule: z.array(
+      z.string().regex(/^\d{2}:\d{2}$/, "Укажите время в формате ЧЧ:ММ"),
+    ), // календарь приема лекарства (HH:MM)[]
   });
   export type Create = z.infer<typeof Create>;
 

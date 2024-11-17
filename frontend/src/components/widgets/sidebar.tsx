@@ -14,10 +14,21 @@ export const SidebarContent = observer(() => {
   const [search, setSearch] = useState("");
   const vm = PatientStore;
 
+  const patients = vm.patients.filter((v) =>
+    `${v.first_name} ${v.last_name} ${v.middle_name}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
+  );
+
   return (
     <>
       <div className="px-6">
-        <IconInput placeholder="Введите имя" rightIcon={<SearchIcon />} />
+        <IconInput
+          placeholder="Введите имя"
+          value={search}
+          onChange={(v) => setSearch(v.target.value)}
+          rightIcon={<SearchIcon />}
+        />
       </div>
       <h2 className="px-6 py-5 font-semibold text-sm text-slate-500">
         Мои пациенты
@@ -28,7 +39,16 @@ export const SidebarContent = observer(() => {
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          vm.patients.map((v) => <PatientCard key={v.id} item={v} />)
+          <>
+            {patients.map((v) => (
+              <PatientCard key={v.id} item={v} />
+            ))}
+            {patients.length === 0 && (
+              <div className="flex justify-center items-center h-full">
+                <p className="text-sm text-slate-500">Пациентов не найдено</p>
+              </div>
+            )}
+          </>
         )}
       </ul>
       <div className="px-6 pt-2">

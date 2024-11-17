@@ -28,7 +28,7 @@ export const PatientCard: FC<Props> = observer((x) => {
       <div className="flex justify-between">
         <div>
           <small className="text-slate-500 font-medium block">
-            {x.item.first_name}
+            EMIAS: {x.item.emias_id}
           </small>
           <p className="text-lg font-medium">
             {x.item.last_name} {x.item.first_name} {x.item.middle_name}

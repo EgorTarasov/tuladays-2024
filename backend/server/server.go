@@ -23,6 +23,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	recovermw "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -50,12 +51,21 @@ func NewServer(cfg *Config) Server {
 		BodyLimit:    4096,
 	})
 	nodeID := uuid.NewString()
-
+	app.Use(logger.New())
+	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     strings.Join(cfg.Server.Cors, ", "),
 		AllowCredentials: true,
 	}))
 	app.Static("/", "./static")
+	// Catch-all route to redirect to "/" for SPA
+	app.Use(func(c *fiber.Ctx) error {
+
+		if len(c.Path()) >= 4 && c.Path()[:4] == "/api" {
+			return c.Next()
+		}
+		return c.Redirect("/")
+	})
 
 	app.Use(logger.New())
 	app.Use(recovermw.New())

@@ -14,6 +14,8 @@ type PatientRepo interface {
 type HealthDataRepo interface {
 	GetHeartRateData(ctx context.Context, id int64) (uint8, uint8, uint8, error)
 	GetHeartRateGraph(ctx context.Context, patientID int64) ([]models.Graph, error)
+	GetOxygenData(ctx context.Context, patientID int64) (uint8, error)
+	GetSugarData(ctx context.Context, patientID int64) (float32, error)
 }
 
 type MedicineRepo interface {

@@ -43,9 +43,25 @@ func (s *service) GetDashboardForUser(ctx context.Context, id int64) (models.Pat
 	if err != nil {
 		return patientData, err
 	}
+	patientData.TelegramLink = s.createTelegramLink(patientData.ID)
+	patientData.Alert = s.checkPatientAlert(ctx, patientData.ID)
 
 	bpm, sys, dia, err := s.health.GetHeartRateData(ctx, id)
 	if err != nil {
+		return patientData, err
+	}
+
+	patientData.PercentOxygen, err = s.health.GetOxygenData(ctx, id)
+
+	if err != nil {
+		log.Err(err).Msg("failed to get oxygen data")
+		return patientData, err
+	}
+
+	patientData.BloodSugar, err = s.health.GetSugarData(ctx, id)
+
+	if err != nil {
+		log.Err(err).Msg("failed to get blood sugar data")
 		return patientData, err
 	}
 
@@ -54,6 +70,7 @@ func (s *service) GetDashboardForUser(ctx context.Context, id int64) (models.Pat
 		Systolic:  sys,
 		Diastolic: dia,
 	}
+
 	graphs, err := s.health.GetHeartRateGraph(ctx, id)
 	if err != nil {
 		log.Err(err).Msg("failed to get heart rate graph")

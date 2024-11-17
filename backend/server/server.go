@@ -90,7 +90,7 @@ func NewServer(cfg *Config) Server {
 	healthDataRepo := dashboardRepo.NewHealthData(ch)
 	medicineRepo := dashboardRepo.NewMedicine(pool)
 
-	dashboardService := dashboardService.New(healthDataRepo, patientRepo, medicineRepo)
+	dashboardService := dashboardService.New(healthDataRepo, patientRepo, medicineRepo, cfg.Dashboard)
 	dashboardHandler := dashboardHandlers.NewHandler(dashboardService)
 	dashboardHandlers.InitRoutes(api, views, dashboardHandler)
 

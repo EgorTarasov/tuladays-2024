@@ -8,7 +8,8 @@ import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 import { Button, buttonVariants } from "../ui/button";
 import { useEffect, useState } from "react";
 import { cn } from "@/utils/cn";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { AuthService } from "@/stores/auth.service";
 
 export const SidebarContent = observer(() => {
   const [search, setSearch] = useState("");
@@ -61,10 +62,16 @@ export const SidebarContent = observer(() => {
 export const SidebarMobile = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-
+  const navigate = useNavigate();
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setOpen(true);
+    }
+  }, [window.innerWidth]);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -78,7 +85,14 @@ export const SidebarMobile = () => {
       </DrawerTrigger>
       <DrawerContent className="max-h-[80vh] overflow-hidden h-full pb-10">
         <SidebarContent />
-        <Button variant="outline" className="w-full mt-4">
+        <Button
+          variant="outline"
+          className="w-full mt-4"
+          onClick={() => {
+            AuthService.logout();
+            navigate({ to: "/login" });
+          }}
+        >
           <LogOut />
           Выход
         </Button>

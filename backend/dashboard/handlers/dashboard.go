@@ -13,7 +13,6 @@ type handler struct {
 type Handler interface {
 	GetDashboardForUser(*fiber.Ctx) error
 	GetPatients(*fiber.Ctx) error
-	GetPatientsList(*fiber.Ctx) error
 	CreateMedicineRecord(*fiber.Ctx) error
 	GetMedicineRecord(*fiber.Ctx) error
 	ListAllRecords(*fiber.Ctx) error
@@ -34,7 +33,6 @@ func initApi(api fiber.Router, h Handler) error {
 	dashboard := api.Group("/dashboard")
 	dashboard.Get("/patient/:id", middleware.RoleMiddleware("doctor"), h.GetDashboardForUser)
 	dashboard.Get("/patients", middleware.RoleMiddleware("doctor"), h.GetPatients)
-	dashboard.Get("/patients/list", middleware.RoleMiddleware("doctor"), h.GetPatientsList)
 
 	medicine := api.Group("/medicine")
 	medicine.Post("/create", middleware.RoleMiddleware("doctor"), h.CreateMedicineRecord)

@@ -22,7 +22,7 @@ export default defineConfig({
   ],
   build: {
     target: "esnext",
-    outDir: "../static",
+    outDir: "../backend/static",
   },
   resolve: {
     alias: {

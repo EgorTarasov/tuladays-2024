@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "rag"
+version = "0.1.0"
+description = ""
+authors = ["EgorTarasov <61450170+EgorTarasov@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.8"
+langchain-huggingface = "^0.1.2"
+langchain-postgres = "^0.0.12"
+langchain-text-splitters = "^0.3.2"
+tiktoken = "^0.8.0"
+einops = "^0.8.0"
+langchain = "^0.3.7"
+langchain-ollama = "^0.2.0"
+grpcio = "^1.68.0"
+grpcio-tools = "^1.68.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

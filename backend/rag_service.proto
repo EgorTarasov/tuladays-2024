@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package rag;
+
+option go_package = "pkg/pb;pb";
+
+import "google/protobuf/struct.proto";
+
+// RAGService defines the gRPC service for the Retrieval-Augmented Generation pipeline.
+service RAGService {
+  // Adds documents to the RAG pipeline.
+  rpc AddDocuments(AddDocumentsRequest) returns (AddDocumentsResponse);
+
+  // Streams query results from the RAG pipeline.
+  rpc StreamQuery(StreamQueryRequest) returns (stream StreamQueryResponse);
+}
+
+// AddDocumentsRequest is the request message for adding documents.
+message AddDocumentsRequest {
+  // List of document texts to add.
+  repeated string texts = 1;
+
+  // List of metadata corresponding to each document.
+  repeated google.protobuf.Struct metadata = 2;
+}
+
+// AddDocumentsResponse is the response message after adding documents.
+message AddDocumentsResponse {
+  // Status message indicating success or failure.
+  string status = 1;
+}
+
+// StreamQueryRequest is the request message for querying the RAG pipeline.
+message StreamQueryRequest {
+  // The query string.
+  string query = 1;
+}
+
+// StreamQueryResponse is the streamed response message for query results.
+message StreamQueryResponse {
+  // The content of the document chunk.
+  string content = 1;
+
+  // Metadata associated with the document chunk.
+  google.protobuf.Struct metadata = 2;
+}

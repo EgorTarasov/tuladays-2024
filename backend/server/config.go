@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/EgorTarasov/tuladays/auth"
+	"github.com/EgorTarasov/tuladays/chat"
 	"github.com/EgorTarasov/tuladays/pkg/click"
 	"github.com/EgorTarasov/tuladays/pkg/postgres"
 	"github.com/ilyakaznacheev/cleanenv"
@@ -18,6 +19,7 @@ type Config struct {
 	Click  *click.Config    `yaml:"click"`
 	Server *ServerConfig    `yaml:"server"`
 	Auth   *auth.Config     `yaml:"auth"`
+	Chat   *chat.Config     `yaml:"chat"`
 }
 
 func NewConfig(configFilePath string) *Config {

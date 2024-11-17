@@ -77,7 +77,7 @@ func (h *handlers) HandleWebsocket(c *websocket.Conn) {
 	h.clientMutex.Lock()
 	h.clients[userData.UserID] = c
 	h.clientMutex.Unlock()
-
+	c.Conn.WriteMessage(websocket.TextMessage, []byte("connected"))
 	// closing connection on exit
 	defer func() {
 		h.clientMutex.Lock()

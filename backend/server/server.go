@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"os"
 	"os/signal"
@@ -14,11 +15,14 @@ import (
 	authService "github.com/EgorTarasov/tuladays/auth/service"
 	chatHandlers "github.com/EgorTarasov/tuladays/chat/handlers"
 	chatService "github.com/EgorTarasov/tuladays/chat/service"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	dashboardHandlers "github.com/EgorTarasov/tuladays/dashboard/handlers"
 	dashboardRepo "github.com/EgorTarasov/tuladays/dashboard/repo"
 	dashboardService "github.com/EgorTarasov/tuladays/dashboard/service"
 	"github.com/EgorTarasov/tuladays/pkg/click"
+	"github.com/EgorTarasov/tuladays/pkg/pb"
 	"github.com/EgorTarasov/tuladays/pkg/postgres"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -82,7 +86,15 @@ func NewServer(cfg *Config) Server {
 
 	authHandlers.InitRoutes(api, views, authHandler)
 
-	chatService := chatService.NewChatService()
+	conn, err := grpc.NewClient(fmt.Sprintf("%s:%d", cfg.Chat.Host, cfg.Chat.Port), grpc.WithTransportCredentials(
+		insecure.NewCredentials(),
+	))
+	if err != nil {
+		panic(err)
+	}
+	client := pb.NewRAGServiceClient(conn)
+
+	chatService := chatService.NewChatService(cfg.Chat, client)
 	chatHandler := chatHandlers.NewChatHandlers(chatService)
 	chatHandlers.InitRoutes(api, views, chatHandler)
 

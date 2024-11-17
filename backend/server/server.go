@@ -55,6 +55,7 @@ func NewServer(cfg *Config) Server {
 		AllowOrigins:     strings.Join(cfg.Server.Cors, ", "),
 		AllowCredentials: true,
 	}))
+	app.Static("/", "./static")
 
 	app.Use(logger.New())
 	app.Use(recovermw.New())

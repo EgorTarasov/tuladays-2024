@@ -67,7 +67,11 @@ export const SidebarMobile = () => {
   }, [location.pathname]);
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer
+      open={open}
+      onOpenChange={setOpen}
+      defaultOpen={window.innerWidth < 768}
+    >
       <DrawerTrigger
         className={cn(
           buttonVariants({ variant: "outline", size: "icon" }),

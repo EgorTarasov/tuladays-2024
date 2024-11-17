@@ -1,10 +1,19 @@
 import { DrugEndpoint } from "@/api/endpoints/drug.endpoint";
 import { PatientEndpoint } from "@/api/endpoints/patient.endpoint";
 import { DrugDto } from "@/api/models/drug.model";
+import api from "@/api/utils";
+import { authToken } from "@/api/utils/auth-token";
 import { PriorityCard } from "@/components/cards/priority-icon";
 import { DrugForm } from "@/components/forms/drug.form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Column, DataTable } from "@/components/ui/data-table";
+import { Field, Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnalyticsChart } from "@/components/widgets/chart";
 import { ConfirmationModal } from "@/components/widgets/modal/confirmation.modal";
@@ -12,8 +21,14 @@ import { showModal } from "@/components/widgets/modal/show";
 import { AuthService } from "@/stores/auth.service";
 import { useInvalidate } from "@/utils/hooks/use-invalidate";
 import { getTimeString, pluralize } from "@/utils/pluralize";
+import { zz } from "@/utils/zod/zz";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Mail, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const TitleValue = ({
   title,
@@ -32,7 +47,15 @@ const TitleValue = ({
   </div>
 );
 
+const schema = zz.object({
+  message: zz.string().trim().min(1),
+});
+
 const Page = () => {
+  const [popupOpen, setPopupOpen] = useState(false);
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  });
   const invalidate = useInvalidate({
     fullPath: "/patient/$id",
     params: { id: Route.useParams().id },
@@ -134,14 +157,55 @@ const Page = () => {
         />
       </div>
       <div className="pt-5 flex gap-2">
-        <a
-          href={x.patient.telegram_link}
-          target="_blank"
-          className={buttonVariants()}
-        >
-          Написать сообщение
-          <Mail />
-        </a>
+        <Popover open={popupOpen} onOpenChange={setPopupOpen}>
+          <PopoverTrigger asChild>
+            <button className={buttonVariants()}>
+              Написать сообщение
+              <Mail />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Form {...form}>
+              <form
+                className="flex flex-col gap-y-2"
+                onSubmit={form.handleSubmit((v) =>
+                  toast.promise(
+                    fetch("https://bot.larek.tech/notification", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: x.patient.id,
+                        text: v.message,
+                      }),
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        Authorization: `Bearer ${authToken.get()}`,
+                      },
+                    }),
+                    {
+                      success: "Сообщение отправлено",
+                      error: "Не удалось отправить сообщение",
+                      finally: () => {
+                        form.reset();
+                        setPopupOpen(false);
+                      },
+                    },
+                  ),
+                )}
+              >
+                <Field
+                  control={form.control}
+                  component={(x) => <Input {...x} />}
+                  name="message"
+                  label="Сообщение"
+                />
+                <Button type="submit" size="sm" className="ml-auto">
+                  Отправить
+                </Button>
+              </form>
+            </Form>
+          </PopoverContent>
+        </Popover>
         <Button variant="outline">Записать на приём</Button>
       </div>
       <Tabs defaultValue="changes">

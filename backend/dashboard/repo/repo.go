@@ -9,6 +9,7 @@ import (
 type PatientRepo interface {
 	GetPatientById(ctx context.Context, id int64) (models.PatientData, error)
 	GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, offset int) ([]models.PatientData, error)
+	GetCreationDate(ctx context.Context, id int64) (string, string, error)
 }
 
 type HealthDataRepo interface {

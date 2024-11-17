@@ -30,6 +30,8 @@ type PatientData struct {
 	PercentOxygen uint8     `json:"percent_oxygen"`
 	BloodSugar    float32   `json:"blood_sugar"`
 	HeartData     HeartData `json:"heart_data"`
+	CreatedAt     string    `json:"created_at"`
+	LastVisit     string    `json:"last_visit"`
 	Graphs        []Graph   `json:"graphs"`
 	Diagnosis     string    `json:"diagnosis"`
 }

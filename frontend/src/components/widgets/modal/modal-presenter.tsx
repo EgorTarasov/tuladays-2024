@@ -22,7 +22,7 @@ const Modal: FC<ModalRequest> = observer((x) => {
         open={!closed}
         onOpenChange={(v) => !modalBusy && !v && onClose(undefined)}
       >
-        <DialogContent disableClose={modalBusy}>
+        <DialogContent>
           <x.component {...x.props} done={onClose} />
         </DialogContent>
       </Dialog>

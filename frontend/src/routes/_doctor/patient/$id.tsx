@@ -1,31 +1,15 @@
+import { DrugEndpoint } from "@/api/endpoints/drug.endpoint";
 import { PatientEndpoint } from "@/api/endpoints/patient.endpoint";
 import { DrugDto } from "@/api/models/drug.model";
+import { DrugForm } from "@/components/forms/drug.form";
 import { Button } from "@/components/ui/button";
-import { Column } from "@/components/ui/data-table";
+import { Column, DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnalyticsChart } from "@/components/widgets/chart";
+import { showModal } from "@/components/widgets/modal/show";
 import { getTimeString, pluralize } from "@/utils/pluralize";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Mail } from "lucide-react";
-
-const drugAssignColumns: Column<DrugDto.Item>[] = [
-  {
-    header: "Лекарство",
-    accessor: (x) => x.name,
-  },
-  {
-    header: "Дозировка",
-    accessor: (x) =>
-      `${x.dosage.quantity} мг, ${x.dosage.frequencyPerDay} ${pluralize(
-        x.dosage.frequencyPerDay,
-        ["раз", "раза", "раз"],
-      )} в день`,
-  },
-  {
-    header: "Курс лечения",
-    accessor: (x) => `${getTimeString(x.treatmentDurationDays)}`,
-  },
-];
+import { Mail, Trash2 } from "lucide-react";
 
 const TitleValue = ({
   title,
@@ -43,6 +27,33 @@ const TitleValue = ({
 const Page = () => {
   const x = Route.useLoaderData();
 
+  const drugAssignColumns: Column<DrugDto.Item>[] = [
+    {
+      header: "Лекарство",
+      accessor: (x) => x.name,
+    },
+    {
+      header: "Дозировка",
+      accessor: (x) =>
+        `${x.dosage.quantity} мг, ${x.dosage.frequencyPerDay} ${pluralize(
+          x.dosage.frequencyPerDay,
+          ["раз", "раза", "раз"],
+        )} в день`,
+    },
+    {
+      header: "Курс лечения",
+      accessor: (x) => `${getTimeString(x.treatmentDurationDays)}`,
+    },
+    {
+      header: <Trash2 />,
+      accessor: (x) => (
+        <Button variant="ghost-destructive" size="sm">
+          Отмена
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <main className="p-10 flex flex-col h-full overflow-auto text-slate-800 w-full">
       <h1 className="font-medium text-2xl text-gray-600">О пациенте</h1>
@@ -58,7 +69,7 @@ const Page = () => {
       <h3 className="font-semibold text-xl text-gray-900 pt-5">
         Последние измерения:
       </h3>
-      <div className="grid grid-cols-2 gap-x-24 gap-y-1">
+      <div className="grid grid-cols-[auto_auto] gap-x-24 gap-y-1 w-fit">
         <TitleValue
           title="Частота сердечных сокращений"
           value={x.patient.heart_data.heart_rate}
@@ -80,19 +91,30 @@ const Page = () => {
         </Button>
         <Button variant="outline">Записать на приём</Button>
       </div>
-      <Tabs>
-        <TabsList>
+      <Tabs defaultValue="changes">
+        <TabsList className="mt-4">
           <TabsTrigger value="changes">Изменения показателей</TabsTrigger>
           <TabsTrigger value="drugs-assign">Назначение лекарств</TabsTrigger>
           <TabsTrigger value="drugs-consume">Приём лекарств</TabsTrigger>
           {/* <TabsTrigger value="recommendations">Рекомендации</TabsTrigger> */}
         </TabsList>
-        <TabsContent value="changes">
+        <TabsContent
+          value="changes"
+          className="grid grid-cols-[repeat(auto-fill,minmax(500px,1fr))] gap-4"
+        >
           {x.patient.graphs.map((v) => (
             <AnalyticsChart key={v.title} data={v} />
           ))}
         </TabsContent>
-        <TabsContent value="drugs-assign"></TabsContent>
+        <TabsContent value="drugs-assign">
+          <DataTable columns={drugAssignColumns} data={x.drugs ?? []} />
+          <Button
+            onClick={() => showModal(DrugForm, { used: x.drugs ?? [] })}
+            className="mt-2"
+          >
+            Добавить лекарство
+          </Button>
+        </TabsContent>
         <TabsContent value="drugs-consume"></TabsContent>
         {/* <TabsContent value="recommendations">
           <div className="rounded-xl bg-card p-4">
@@ -112,11 +134,12 @@ export const Route = createFileRoute("/_doctor/patient/$id")({
     }
 
     try {
-      const [patient] = await Promise.all([
+      const [patient, drugs] = await Promise.all([
         PatientEndpoint.getById(Number(x.params.id)),
+        DrugEndpoint.getByPatient(Number(x.params.id)),
       ]);
 
-      return { patient };
+      return { patient, drugs };
     } catch (error) {
       throw redirect({ to: "/" });
     }

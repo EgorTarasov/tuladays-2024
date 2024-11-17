@@ -12,6 +12,7 @@ export namespace DrugDto {
       frequencyPerDay: z.number().int().min(1),
     }),
     treatmentDurationDays: z.number().int().min(1), // длительность курса лечения
+    schedule: z.array(z.string().regex(/^\d{2}:\d{2}$/)), // календарь приема лекарства (HH:MM)[]
   });
   export type Create = z.infer<typeof Create>;
 
@@ -19,10 +20,10 @@ export namespace DrugDto {
     id: z.number(),
     name: z.string(),
     dosage: z.object({
-      quantity: z.number().int().min(1),
-      frequencyPerDay: z.number().int().min(1),
+      quantity: z.number(),
+      frequencyPerDay: z.number(),
     }),
-    treatmentDurationDays: z.number().int().min(1), // длительность курса лечения
+    treatmentDurationDays: z.number(), // длительность курса лечения
     schedule: z.array(z.string().regex(/^\d{2}:\d{2}$/)), // календарь приема лекарства (HH:MM)[]
     remindPatient: z.boolean(), // напоминать пациенту
     disableForPatient: z.boolean(), // отключить у пациента

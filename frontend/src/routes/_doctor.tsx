@@ -15,7 +15,7 @@ const Page = () => {
   return (
     <div className="flex size-full">
       <Sidebar />
-      <div className="max-w-screen-lg w-full">
+      <div className="w-full">
         <Outlet />
       </div>
     </div>

@@ -5,6 +5,8 @@ import { PlusIcon, SearchIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Button } from "../ui/button";
 import { showModal } from "./modal/show";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { PatientCSVUploadModal } from "./modal/patient-data.modal";
 
 export const Sidebar = observer(() => {
   const vm = PatientStore;
@@ -22,6 +24,9 @@ export const Sidebar = observer(() => {
           <PatientCard key={v.id} item={v} />
         ))}
       </ul>
+      <div className="px-6 pt-2">
+        <PatientCSVUploadModal />
+      </div>
       {/* <div className="px-6 pt-2">
         <Button className="w-full" onClick={() => showModal()}>
           <PlusIcon />

@@ -1,7 +1,16 @@
 import { observer } from "mobx-react-lite";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, Label, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Label,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   ChartConfig,
@@ -18,16 +27,9 @@ interface Data {
 }
 
 export const AnalyticsChart: React.FC<Data> = observer((x) => {
-  const filteredData = Object.entries(x.data.data ?? {}).map(([date, info]) => {
-    return {
-      date: new Date(date),
-      info,
-    };
-  });
-
   const chartConfig = {
     info: {
-      label: x.data.x_axis,
+      label: x.data.y_axis,
       color: "hsl(var(--chart-1))",
     },
   } satisfies ChartConfig;
@@ -43,51 +45,34 @@ export const AnalyticsChart: React.FC<Data> = observer((x) => {
         config={chartConfig}
         className="aspect-auto h-[400px] w-full min-h-48"
       >
-        <AreaChart data={filteredData}>
+        <LineChart data={x.data.data?.reverse() ?? []}>
           <defs>
             <linearGradient id="fillall_count" x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
-                stopColor="var(--color-all_count)"
+                stopColor="var(--color-info)"
                 stopOpacity={0.8}
               />
               <stop
                 offset="95%"
-                stopColor="var(--color-all_count)"
+                stopColor="var(--color-info)"
                 stopOpacity={0.1}
               />
             </linearGradient>
             <linearGradient id="fillConversion" x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
-                stopColor="var(--color-success_count)"
+                stopColor="var(--color-info)"
                 stopOpacity={0.8}
               />
               <stop
                 offset="95%"
-                stopColor="var(--color-success_count)"
+                stopColor="var(--color-info)"
                 stopOpacity={0.1}
               />
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} />
-          <YAxis
-            dataKey="info"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            minTickGap={32}
-          >
-            <Label
-              style={{
-                textAnchor: "middle",
-                fontSize: "130%",
-                fill: "white",
-              }}
-              angle={270}
-              value={x.data.y_axis}
-            />
-          </YAxis>
           <XAxis
             dataKey="date"
             tickLine={false}
@@ -96,7 +81,7 @@ export const AnalyticsChart: React.FC<Data> = observer((x) => {
             minTickGap={32}
             tickFormatter={(value) => {
               const date = new Date(value);
-              return date.toLocaleDateString("en-US", {
+              return date.toLocaleDateString("ru-RU", {
                 month: "short",
                 day: "numeric",
               });
@@ -107,7 +92,7 @@ export const AnalyticsChart: React.FC<Data> = observer((x) => {
             content={
               <ChartTooltipContent
                 labelFormatter={(value) => {
-                  return new Date(value).toLocaleDateString("en-US", {
+                  return new Date(value).toLocaleDateString("ru-RU", {
                     month: "short",
                     day: "numeric",
                   });
@@ -116,22 +101,16 @@ export const AnalyticsChart: React.FC<Data> = observer((x) => {
               />
             }
           />
-          <Area
-            dataKey="success_count"
+          <Line
+            dataKey="info"
             type="monotone"
-            fill="url(#fillConversion)"
-            stroke="var(--color-success_count)"
-            stackId="a"
-          />
-          <Area
-            dataKey="all_count"
-            type="monotone"
-            fill="url(#fillall_count)"
-            stroke="var(--color-all_count)"
-            stackId="a"
+            strokeWidth={2}
+            dot={false}
+            // fill="url(#fillall_count)"
+            stroke="var(--color-info)"
           />
           <ChartLegend content={<ChartLegendContent />} />
-        </AreaChart>
+        </LineChart>
       </ChartContainer>
     </div>
   );

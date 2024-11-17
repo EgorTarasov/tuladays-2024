@@ -49,7 +49,7 @@ export const DataTable = <T,>({
     <TooltipProvider>
       <Table ref={ref} className={className}>
         {caption && <TableCaption>{caption}</TableCaption>}
-        <TableHeader className="sticky top-0 bg-card">
+        <TableHeader className="sticky top-0">
           <TableRow className="hover:bg-transparent">
             {columns.map((column, index) => (
               <TableHead

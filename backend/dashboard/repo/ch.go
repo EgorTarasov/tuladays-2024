@@ -51,9 +51,7 @@ func (c *ch) GetHeartRateGraph(ctx context.Context, patientID int64) ([]models.G
 	diastolic_pressure
 FROM heart_data
 WHERE patient_id = $1
-ORDER BY timestamp DESC
-LIMIT 1;
-`
+ORDER BY timestamp DESC;`
 	rows, err := c.db.Query(query, patientID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query heart data: %w", err)

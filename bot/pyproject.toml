@@ -12,6 +12,9 @@ fastapi = {extras = ["standard"], version = "^0.115.5"}
 psycopg = {extras = ["pool"], version = "^3.2.3"}
 clickhouse-driver = "^0.2.9"
 pandas = "^2.2.3"
+minio = "^7.2.10"
+pillow = "^11.0.0"
+torch = "^2.5.1"
 
 
 [tool.poetry.group.dev.dependencies]

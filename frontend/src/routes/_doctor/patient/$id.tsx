@@ -181,7 +181,7 @@ const Page = () => {
                         "Access-Control-Allow-Origin": "*",
                         Authorization: `Bearer ${authToken.get()}`,
                       },
-                    }),
+                    }).catch(() => {}),
                     {
                       loading: "Отправка сообщения...",
                       success: "Сообщение отправлено",

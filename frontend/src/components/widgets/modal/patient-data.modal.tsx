@@ -99,7 +99,7 @@ export const PatientCSVUploadModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">
+        <Button className="w-full py-6 md:py-4">
           <Upload className="mr-2 h-4 w-4" />
           Добавить пациента
         </Button>
@@ -113,14 +113,7 @@ export const PatientCSVUploadModal = () => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* <Input
-            id="csv-file"
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            ref={fileInputRef}
-          /> */}
-          <input
+          <Input
             id="csv-file"
             type="file"
             accept=".csv"

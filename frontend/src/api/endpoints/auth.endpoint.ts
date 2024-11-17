@@ -22,7 +22,7 @@ export namespace AuthEndpoint {
   };
 
   export const register = async (v: RegisterTemplate) =>
-    api.post("/auth/register", v, {
+    api.post("/auth/signup", v, {
       schema: AuthDto.Token,
     });
 }

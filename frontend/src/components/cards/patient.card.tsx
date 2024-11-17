@@ -21,7 +21,7 @@ export const PatientCard: FC<Props> = observer((x) => {
         navigate({ to: "/patient/$id", params: { id: x.item.id.toString() } })
       }
       className={cn(
-        "flex flex-col relative py-3 px-6 cursor-pointer",
+        "flex flex-col relative py-3 px-6 cursor-pointer border-b",
         currentId === x.item.id.toString() && "bg-slate-50",
       )}
     >
@@ -44,7 +44,7 @@ export const PatientCard: FC<Props> = observer((x) => {
         onClick={(e) => e.stopPropagation()}
         className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
       >
-        Написать сообщение
+        Зарегистрировать пользователя
       </a>
     </li>
   );

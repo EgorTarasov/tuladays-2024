@@ -24,7 +24,7 @@ const TitleValue = ({
   value: string | number;
   unit: string;
 }) => (
-  <div className="flex gap-2">
+  <div className="flex flex-col lg:flex-row gap-x-2">
     <span className="text-gray-900 font-medium">{title}:</span>
     <span className="text-gray-700 font-medium">
       {value} {unit}
@@ -84,15 +84,15 @@ const Page = () => {
   ];
 
   return (
-    <main className="p-10 flex flex-col h-full overflow-auto text-slate-800 w-full">
+    <main className="px-6 py-10 md:p-10 flex flex-col h-full overflow-auto text-slate-800 w-full">
       <h1 className="font-medium text-2xl text-gray-600">О пациенте</h1>
-      <div className="flex justify-between items-center pt-3">
+      <div className="flex flex-col xl:flex-row justify-between xl:items-center pt-3">
         <h2 className="font-medium text-3xl text-gray-900">
           {x.patient.last_name} {x.patient.first_name} {x.patient.middle_name}
         </h2>
         <PriorityCard data={x.patient.risk_of_disease} text={x.patient.alert} />
       </div>
-      <div className="grid grid-cols-[auto_auto] gap-x-24 gap-y-1 w-fit pt-4">
+      <div className="grid grid-cols-1 xl:grid-cols-[auto_auto] gap-x-24 gap-y-1 w-fit pt-4">
         <TitleValue title="Возраст" value={x.patient.age} unit="лет" />
         <TitleValue title="Адрес" value={x.patient.address} unit="" />
         <TitleValue
@@ -111,7 +111,7 @@ const Page = () => {
       <h3 className="font-semibold text-xl text-gray-900 pt-5">
         Последние измерения:
       </h3>
-      <div className="grid grid-cols-[auto_auto] gap-x-24 gap-y-1 w-fit">
+      <div className="grid grid-cols-1 xl:grid-cols-[auto_auto] gap-x-24 gap-y-1 w-fit">
         <TitleValue
           title="Частота сердечных сокращений"
           value={x.patient.heart_data.heart_rate}
@@ -148,12 +148,12 @@ const Page = () => {
         <TabsList className="mt-4">
           <TabsTrigger value="changes">Изменения показателей</TabsTrigger>
           <TabsTrigger value="drugs-assign">Назначение лекарств</TabsTrigger>
-          <TabsTrigger value="drugs-consume">Приём лекарств</TabsTrigger>
+          {/* <TabsTrigger value="drugs-consume">Приём лекарств</TabsTrigger> */}
           {/* <TabsTrigger value="recommendations">Рекомендации</TabsTrigger> */}
         </TabsList>
         <TabsContent
           value="changes"
-          className="grid grid-cols-[repeat(auto-fill,minmax(500px,1fr))] gap-4"
+          className="grid grid-cols-1 xl:grid-cols-2 gap-4"
         >
           {x.patient.graphs.map((v) => (
             <AnalyticsChart key={v.title} data={v} />

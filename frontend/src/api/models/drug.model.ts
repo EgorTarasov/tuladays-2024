@@ -13,6 +13,7 @@ export namespace DrugDto {
     }),
     treatmentDurationDays: z.number().int().min(1), // длительность курса лечения
   });
+  export type Create = z.infer<typeof Create>;
 
   export const Item = z.object({
     id: z.number(),

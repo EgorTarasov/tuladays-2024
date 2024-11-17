@@ -8,7 +8,7 @@ import { ModalPresenter } from "@/components/widgets/modal/modal-presenter";
 const Page = React.memo(() => {
   return (
     <TooltipProvider>
-      <Toaster richColors theme="light" position="bottom-left" />
+      {/* <Toaster richColors theme="light" position="bottom-left" /> */}
       <ModalPresenter />
       <Outlet />
     </TooltipProvider>

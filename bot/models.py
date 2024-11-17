@@ -33,3 +33,9 @@ class OxygenData:
 class BloodSugarData:
     user_id: int
     blood_sugar: float
+
+
+@dataclass
+class TemperatureData:
+    user_id: int
+    temperature: float

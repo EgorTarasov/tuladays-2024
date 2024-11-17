@@ -100,3 +100,41 @@ LIMIT 1;
 
 	return graphs, nil
 }
+
+func (c *ch) GetOxygenData(ctx context.Context, patientID int64) (uint8, error) {
+	query := `SELECT
+	blood_oxygen_level
+	FROM blood_oxygen_data
+	WHERE patient_id = $1
+	ORDER BY timestamp DESC
+	LIMIT 1;`
+	var blood_oxygen_data int
+	err := c.db.QueryRow(query, patientID).Scan(&blood_oxygen_data)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil // No data found
+		}
+		return 0, fmt.Errorf("failed to query oxygen data: %w", err)
+	}
+
+	return uint8(blood_oxygen_data), nil
+}
+
+func (c *ch) GetSugarData(ctx context.Context, patientID int64) (float32, error) {
+	query := `SELECT
+	sugar_level
+	FROM sugar_level_data
+	WHERE patient_id = $1
+	ORDER BY timestamp DESC
+	LIMIT 1;`
+	var sugar_level_data float32
+	err := c.db.QueryRow(query, patientID).Scan(&sugar_level_data)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil // No data found
+		}
+		return 0, fmt.Errorf("failed to query oxygen data: %w", err)
+	}
+
+	return float32(sugar_level_data), nil
+}

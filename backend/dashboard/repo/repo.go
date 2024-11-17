@@ -9,11 +9,14 @@ import (
 type PatientRepo interface {
 	GetPatientById(ctx context.Context, id int64) (models.PatientData, error)
 	GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, offset int) ([]models.PatientData, error)
+	GetCreationDate(ctx context.Context, id int64) (string, string, error)
 }
 
 type HealthDataRepo interface {
 	GetHeartRateData(ctx context.Context, id int64) (uint8, uint8, uint8, error)
 	GetHeartRateGraph(ctx context.Context, patientID int64) ([]models.Graph, error)
+	GetOxygenData(ctx context.Context, patientID int64) (uint8, error)
+	GetSugarData(ctx context.Context, patientID int64) (float32, error)
 }
 
 type MedicineRepo interface {

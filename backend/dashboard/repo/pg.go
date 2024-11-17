@@ -30,6 +30,8 @@ func (pg *pg) GetPatientById(ctx context.Context, id int64) (models.PatientData,
 		return result, dashboard.ErrPatientNotFound
 	}
 	result.ID = u.FkUserID.Int64
+	result.EMIASID = u.ExternalID
+	result.Address = u.Address
 	result.FirstName = u.FirstName
 	result.LastName = u.LastName
 	result.MiddleName = u.MiddleName
@@ -63,6 +65,10 @@ func (pg *pg) GetPatientsByDoctorID(ctx context.Context, doctorID int64, limit, 
 	return result, nil
 }
 
-type PatientData struct {
-	Alert string `json:"alert"`
+func (pg *pg) GetCreationDate(ctx context.Context, id int64) (string, string, error) {
+	u, err := pg.Queries.GetCreationDateById(ctx, int32(id))
+	if err != nil {
+		return "", "", err
+	}
+	return u.CreatedAt.Time.String(), u.CreatedAt.Time.AddDate(0, 0, 5).String(), nil
 }

@@ -61,15 +61,20 @@ current_requests: dict = dict()
 
 @dp.message()
 async def get_message(message: types.Message):
+    print(message.text)
     if message.from_user:
         user_key = str(message.from_user.id)
         if user_key in current_requests:
+            with db_pool.connection() as conn:
+                user_id = db.get_user_id(conn, message.from_user.id)
+            if not user_id:
+                return {"error": "user not found"}
             match current_requests.get(user_key):
                 case "oxygen":
-                    await process_oxygen(message=message)
+                    await process_oxygen(message=message, user_id=user_id)
                     current_requests.pop(user_key, None)
                 case "sugar":
-                    await process_blood_sugar(message=message)
+                    await process_blood_sugar(message=message, user_id=user_id)
                     current_requests.pop(user_key, None)
                 case "pressure":
                     await get_photo(message=message)
@@ -115,11 +120,12 @@ async def get_photo(message: types.Message):
         )
 
 
-async def process_temperature(message: types.Message):
+async def process_temperature(message: types.Message, user_id: int):
     if message.from_user:
         if message.text:
             data = BloodSugarData(
-                user_id=message.from_user.id, blood_sugar=float(message.text)
+                user_id=message.from_user.id,
+                blood_sugar=float(message.text),
             )
             ch.insert_sugar_data(
                 ch_client,
@@ -130,11 +136,11 @@ async def process_temperature(message: types.Message):
     )
 
 
-async def process_oxygen(message: types.Message):
+async def process_oxygen(message: types.Message, user_id: int):
     if message.from_user:
         if message.text:
             data = OxygenData(
-                user_id=message.from_user.id,
+                user_id=user_id,
                 oxygen=int(message.text),
             )
             ch.insert_oxygen_data(
@@ -146,11 +152,12 @@ async def process_oxygen(message: types.Message):
     )
 
 
-async def process_blood_sugar(message: types.Message):
+async def process_blood_sugar(message: types.Message, user_id: int):
     if message.from_user:
         if message.text:
             data = BloodSugarData(
-                user_id=message.from_user.id, blood_sugar=float(message.text)
+                user_id=user_id,
+                blood_sugar=float(message.text),
             )
             ch.insert_sugar_data(
                 ch_client,

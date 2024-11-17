@@ -10,3 +10,8 @@ FROM external_data ed
     JOIN doctors_patients dp on u.id = dp.patient_id
 WHERE dp.doctor_id = $1
 LIMIT $2 OFFSET $3;
+-- name: GetCreationDateById :one
+SELECT *
+from users
+WHERE id = $1
+LIMIT 1;

@@ -22,12 +22,16 @@ type PatientData struct {
 	MiddleName    string    `json:"middle_name"`
 	Alert         string    `json:"alert"`
 	EMIASID       string    `json:"emias_id"`
+	Address       string    `json:"address"`
 	TelegramLink  string    `json:"telegram_link"`
 	Age           uint8     `json:"age"`
 	RiskOfDisease float32   `json:"risk_of_disease"`
 	Temperature   float32   `json:"temperature"`
 	PercentOxygen uint8     `json:"percent_oxygen"`
+	BloodSugar    float32   `json:"blood_sugar"`
 	HeartData     HeartData `json:"heart_data"`
+	CreatedAt     string    `json:"created_at"`
+	LastVisit     string    `json:"last_visit"`
 	Graphs        []Graph   `json:"graphs"`
 	Diagnosis     string    `json:"diagnosis"`
 }

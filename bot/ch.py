@@ -1,5 +1,5 @@
 from clickhouse_driver import Client
-from models import HeartData, OxygenData, BloodSugarData
+from models import HeartData, OxygenData, BloodSugarData, TemperatureData
 import datetime as dt
 
 
@@ -59,17 +59,15 @@ def insert_sugar_data(
 
 # def insert_temperature_data(
 #     client: Client,
-#     heart_data: HeartData,
+#     temperature_data: TemperatureData,
 # ) -> None:
 #     query = """
-#     INSERT INTO heart_data (patient_id, timestamp, heart_rate, systolic_pressure, diastolic_pressure)
-#     VALUES (%(patient_id)s, %(timestamp)s, %(heart_rate)s, %(systolic_pressure)s, %(diastolic_pressure)s)
+#     INSERT INTO sugar_level_data (patient_id, timestamp, sugar_level)
+#     VALUES (%(patient_id)s, %(timestamp)s, %(sugar_level)s)
 #     """
 #     data = {
-#         "patient_id": heart_data.user_id,
+#         "patient_id": sugar_data.user_id,
 #         "timestamp": dt.datetime.now(),
-#         "heart_rate": heart_data.heart_rate,
-#         "systolic_pressure": heart_data.systolic_pressure,
-#         "diastolic_pressure": heart_data.diastolic_pressure,
+#         "sugar_level": sugar_data.blood_sugar,
 #     }
 #     client.execute(query, data)

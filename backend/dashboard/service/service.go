@@ -44,8 +44,30 @@ func (s *service) GetDashboardForUser(ctx context.Context, id int64) (models.Pat
 		return patientData, err
 	}
 
+	patientData.TelegramLink = s.createTelegramLink(patientData.ID)
+	patientData.Alert = s.checkPatientAlert(ctx, patientData.ID)
+	patientData.CreatedAt, patientData.LastVisit, err = s.patients.GetCreationDate(ctx, patientData.ID)
+
+	if err != nil {
+		return patientData, err
+	}
+
 	bpm, sys, dia, err := s.health.GetHeartRateData(ctx, id)
 	if err != nil {
+		return patientData, err
+	}
+
+	patientData.PercentOxygen, err = s.health.GetOxygenData(ctx, id)
+
+	if err != nil {
+		log.Err(err).Msg("failed to get oxygen data")
+		return patientData, err
+	}
+
+	patientData.BloodSugar, err = s.health.GetSugarData(ctx, id)
+
+	if err != nil {
+		log.Err(err).Msg("failed to get blood sugar data")
 		return patientData, err
 	}
 
@@ -54,6 +76,7 @@ func (s *service) GetDashboardForUser(ctx context.Context, id int64) (models.Pat
 		Systolic:  sys,
 		Diastolic: dia,
 	}
+
 	graphs, err := s.health.GetHeartRateGraph(ctx, id)
 	if err != nil {
 		log.Err(err).Msg("failed to get heart rate graph")
@@ -69,6 +92,12 @@ func (s *service) GetPatients(ctx context.Context, doctorID int64, limit, offset
 	for i := range patients {
 		patients[i].TelegramLink = s.createTelegramLink(patients[i].ID)
 		patients[i].Alert = s.checkPatientAlert(ctx, patients[i].ID)
+		patients[i].TelegramLink = s.createTelegramLink(patients[i].ID)
+		patients[i].Alert = s.checkPatientAlert(ctx, patients[i].ID)
+		patients[i].CreatedAt, patients[i].LastVisit, err = s.patients.GetCreationDate(ctx, patients[i].ID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if err != nil {
@@ -77,6 +106,20 @@ func (s *service) GetPatients(ctx context.Context, doctorID int64, limit, offset
 
 	for i := range patients {
 		p := &patients[i] // Get a pointer to the current patient
+
+		patients[i].PercentOxygen, err = s.health.GetOxygenData(ctx, patients[i].ID)
+
+		if err != nil {
+			log.Err(err).Msg("failed to get oxygen data")
+			return nil, err
+		}
+
+		patients[i].BloodSugar, err = s.health.GetSugarData(ctx, patients[i].ID)
+
+		if err != nil {
+			log.Err(err).Msg("failed to get blood sugar data")
+			return nil, err
+		}
 
 		bpm, sys, dia, err := s.health.GetHeartRateData(ctx, p.ID)
 		if err != nil {

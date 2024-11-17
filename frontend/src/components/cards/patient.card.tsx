@@ -21,7 +21,7 @@ export const PatientCard: FC<Props> = observer((x) => {
         navigate({ to: "/patient/$id", params: { id: x.item.id.toString() } })
       }
       className={cn(
-        "flex flex-col relative py-3 px-5 cursor-pointer",
+        "flex flex-col relative py-3 px-6 cursor-pointer",
         currentId === x.item.id.toString() && "bg-slate-50",
       )}
     >

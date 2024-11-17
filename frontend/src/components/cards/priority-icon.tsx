@@ -18,7 +18,7 @@ export const PriorityCard: FC<{ data: number; text?: string }> = (x) => {
   return (
     <div
       className={cn(
-        "flex items-center rounded-sm w-fit py-0.5 px-2 gap-2 w-fit",
+        "flex items-center rounded-sm w-fit py-0.5 px-2 gap-2 w-fit h-fit",
       )}
       style={{
         backgroundColor: v.backgroundColor,

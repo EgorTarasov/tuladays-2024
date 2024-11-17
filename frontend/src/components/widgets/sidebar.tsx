@@ -1,18 +1,15 @@
 import { PatientCard } from "@/components/cards/patient.card";
 import { IconInput } from "@/components/ui/input";
 import { PatientStore } from "@/stores/patient.store";
-import { PlusIcon, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { Button } from "../ui/button";
-import { showModal } from "./modal/show";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { PatientCSVUploadModal } from "./modal/patient-data.modal";
 
 export const Sidebar = observer(() => {
   const vm = PatientStore;
 
   return (
-    <aside className="flex flex-col bg-card py-5 min-w-[400px] h-full overflow-hidden">
+    <aside className="flex flex-col bg-card py-5 min-w-[480px] h-full overflow-hidden">
       <div className="px-6">
         <IconInput placeholder="Введите имя" rightIcon={<SearchIcon />} />
       </div>

@@ -10,7 +10,7 @@ export const Sidebar = observer(() => {
   const vm = PatientStore;
 
   return (
-    <aside className="flex flex-col bg-card py-5 w-[400px] h-full overflow-hidden">
+    <aside className="flex flex-col bg-card py-5 min-w-[400px] h-full overflow-hidden">
       <div className="px-6">
         <IconInput placeholder="Введите имя" rightIcon={<SearchIcon />} />
       </div>

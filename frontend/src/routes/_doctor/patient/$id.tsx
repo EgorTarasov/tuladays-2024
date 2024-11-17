@@ -3,6 +3,7 @@ import { DrugDto } from "@/api/models/drug.model";
 import { Button } from "@/components/ui/button";
 import { Column } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnalyticsChart } from "@/components/widgets/chart";
 import { getTimeString, pluralize } from "@/utils/pluralize";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Mail } from "lucide-react";
@@ -72,7 +73,7 @@ const Page = () => {
         />
         <TitleValue title="Температура" value={x.patient.temperature} />
       </div>
-      <div className="pt-5">
+      <div className="pt-5 flex gap-2">
         <Button>
           Написать сообщение
           <Mail />
@@ -86,7 +87,11 @@ const Page = () => {
           <TabsTrigger value="drugs-consume">Приём лекарств</TabsTrigger>
           {/* <TabsTrigger value="recommendations">Рекомендации</TabsTrigger> */}
         </TabsList>
-        <TabsContent value="changes"></TabsContent>
+        <TabsContent value="changes">
+          {x.patient.graphs.map((v) => (
+            <AnalyticsChart key={v.title} data={v} />
+          ))}
+        </TabsContent>
         <TabsContent value="drugs-assign"></TabsContent>
         <TabsContent value="drugs-consume"></TabsContent>
         {/* <TabsContent value="recommendations">

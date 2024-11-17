@@ -32,7 +32,7 @@ export const PriorityLocaleMap = {
     locale: "Низкий",
     alternateLocale: "Низкая",
     color: "#16A34A",
-    backgroundColor: "rgba(247, 119, 0, 0.2)",
+    backgroundColor: "rgba(22, 163, 74, 0.2)",
     icon: <PriorityLowIcon />,
     alternateIcon: <PriorityLowAlternateIcon />,
   },

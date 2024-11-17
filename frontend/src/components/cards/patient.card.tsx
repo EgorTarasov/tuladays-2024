@@ -34,9 +34,9 @@ export const PatientCard: FC<Props> = observer((x) => {
             {x.item.last_name} {x.item.first_name} {x.item.middle_name}
           </Link>
         </div>
-        <PriorityIcon data={Priority.HIGH} />
+        <PriorityIcon data={x.item.risk_of_disease} />
       </div>
-      <PriorityCard data={Priority.HIGH} text={x.item.alert} />
+      <PriorityCard data={x.item.risk_of_disease} text={x.item.alert} />
       <p className="text-slate-800 text-sm">{x.item.diagnosis}</p>
       <a
         href={x.item.telegram_link}

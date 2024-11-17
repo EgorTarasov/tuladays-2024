@@ -5,16 +5,21 @@ import { cn } from "@/utils/cn";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { AlertTriangleIcon } from "lucide-react";
 
-export const PriorityCard: FC<{ data: Priority; text?: string }> = (x) => {
-  const v = PriorityLocaleMap[x.data];
+export const PriorityCard: FC<{ data: number; text?: string }> = (x) => {
+  const priority = (() => {
+    if (x.data >= 0.8) return Priority.HIGH;
+    if (x.data >= 0.5) return Priority.MEDIUM;
+    return Priority.LOW;
+  })();
+  const v = PriorityLocaleMap[priority];
 
-  const isImportant = x.data !== Priority.LOW;
-
-  if (!isImportant) return null;
+  const isImportant = priority !== Priority.LOW;
 
   return (
     <div
-      className={cn("flex items-center rounded-sm w-fit py-0.5 px-2 gap-2")}
+      className={cn(
+        "flex items-center rounded-sm w-fit py-0.5 px-2 gap-2 w-fit",
+      )}
       style={{
         backgroundColor: v.backgroundColor,
         color: v.color,
@@ -27,11 +32,16 @@ export const PriorityCard: FC<{ data: Priority; text?: string }> = (x) => {
 };
 
 export const PriorityIcon: FC<{
-  data: Priority;
+  data: number;
   alternate?: boolean;
   className?: string;
 }> = (x) => {
-  const v = PriorityLocaleMap[x.data];
+  const priority = (() => {
+    if (x.data >= 0.8) return Priority.HIGH;
+    if (x.data >= 0.5) return Priority.MEDIUM;
+    return Priority.LOW;
+  })();
+  const v = PriorityLocaleMap[priority];
 
   return (
     <Tooltip>

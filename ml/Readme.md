@@ -135,7 +135,7 @@ python yolov5/train.py --img 640 --batch 16 --epochs 50 --data prepared_dataset/
 - **Примеры детекций**: изображения с предсказаниями.
 
 ---
-![Alt text](path_to_image "Optional Title")
+![Metrics](metrics.png "Metrics")
 
 
 # Инструкция по использованию скрипта для предсказаний (Inference)

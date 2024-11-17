@@ -62,6 +62,13 @@ export const DataTable = <T,>({
           </TableRow>
         </TableHeader>
         <TableBody>
+          {data.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="py-6 text-center">
+                Ничего не найдено
+              </TableCell>
+            </TableRow>
+          )}
           {data.map((item, rowIndex) => (
             <TableRow
               key={rowIndex}

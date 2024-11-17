@@ -34,8 +34,8 @@ export namespace PatientDto {
     middle_name: z.string(), // Middle name
     age: z.number(), // Age (non-negative integer)
     address: z.string(), // Full address
-    // created_at: z.string(), // Date of admission (ISO 8601 string)
-    // last_visit: z.string(), // Date of the last visit (mock, optional)
+    created_at: z.string(), // Date of admission (ISO 8601 string)
+    last_visit: z.string(), // Date of the last visit (mock, optional)
     risk_of_disease: z.number(), // Risk of disease as a percentage
     temperature: z.number(), // Temperature in °C or similar
     percent_oxygen: z.number(), // Percent oxygen saturation

@@ -49,6 +49,9 @@ const handleRequest = async <T extends Schema>(
   try {
     const res = await req(getConfig(config));
 
+    const contentType = res.headers.get("Content-Type") || "";
+    if (!contentType.includes("application/json")) return {} as z.infer<T>;
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }

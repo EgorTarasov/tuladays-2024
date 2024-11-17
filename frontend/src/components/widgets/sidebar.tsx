@@ -87,7 +87,7 @@ export const SidebarMobile = () => {
         <SidebarContent />
         <Button
           variant="outline"
-          className="w-full mt-4"
+          className="mx-6 mt-4"
           onClick={() => {
             AuthService.logout();
             navigate({ to: "/login" });

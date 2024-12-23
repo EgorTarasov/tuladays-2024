@@ -20,12 +20,6 @@ git clone https://github.com/EgorTarasov/tuladays-2024.git
 cd tuladays-2024
 ```
 
-### Установка зависимостей:
-
-```bash
-pip install -r requirements.txt
-```
-
 ### Запуск проекта:
 
 ```bash

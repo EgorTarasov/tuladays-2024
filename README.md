@@ -16,7 +16,7 @@
 ### Клонирование репозитория:
 
 ```bash
-git clone https://github.com/dinosaurs-team/health-monitor.git
+git clone https://github.com/EgorTarasov/tuladays-2024.git
 cd tuladays-2024
 ```
 
